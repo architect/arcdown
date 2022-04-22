@@ -1,3 +1,4 @@
+// some Architect-preferred defaults
 const MARKDOWN_DEFAULTS = {
   linkify: true,
   html: true,
@@ -10,15 +11,15 @@ const TOC_DEFAULTS = {
 }
 
 import { escape } from 'querystring'
-
 import Markdown from 'markdown-it'
 import markdownItTocAndAnchor from 'markdown-it-toc-and-anchor'
 import markdownItExternalAnchor from 'markdown-it-external-anchor'
 import tinyFrontmatter from 'tiny-frontmatter'
 
+import createHighlight from './lib/highlight.mjs'
 import markdownItClass from './lib/markdown-it-class.js'
 
-let docOutline = ''
+let generatedOutline
 
 export const defaultPlugins = {
   markdownItClass: [ markdownItClass, {} ],
@@ -27,28 +28,26 @@ export const defaultPlugins = {
     // @ts-ignore
     markdownItTocAndAnchor.default, {
       slugify,
-      tocCallback: (_, __, tocHtml) => { docOutline = tocHtml },
+      tocCallback: (_, __, tocHtml) => { generatedOutline = tocHtml },
       ...TOC_DEFAULTS,
     }
   ],
 }
 
-// const { escapeHtml } = Markdown().utils
-
-// const hljs = require('./highlight')
-// const highlight = require('./highlighter').bind(null, hljs, escapeHtml)
-
 export function slugify (s) {
   return escape(String(s).trim().toLowerCase().replace(/\s+/g, '-').replace(/\(\)/g, ''))
 }
 
-export default function (rawMd, options = {}) {
+export default async function (mdFile, rendererOptions = {}) {
   const {
-    markdownIt = {},
-    plugins: addedPlugins = {},
-  } = options
+    hljs = {},                  // highlight.js languages and classes
+    markdownIt = {},            // override mardown-it options
+    options: addedOptions = {}, // override default plugins options
+    plugins: addedPlugins = {}, // add custom plugins
+  } = rendererOptions
 
   const renderer = new Markdown({
+    highlight: await createHighlight({ languages: hljs.languages, classString: hljs.classString }),
     ...MARKDOWN_DEFAULTS,
     ...markdownIt,
   })
@@ -56,16 +55,16 @@ export default function (rawMd, options = {}) {
   const allPlugins = { ...defaultPlugins, ...addedPlugins }
   for (const mdPlugin in allPlugins) {
     let [ plugin, pluginOptions ] = allPlugins[mdPlugin]
-    renderer.use(plugin, { ...pluginOptions, ...options[mdPlugin] })
+    if (plugin) renderer.use(plugin, { ...pluginOptions, ...addedOptions[mdPlugin] })
   }
 
-  const { attributes, body } = tinyFrontmatter(rawMd)
+  const { attributes, body } = tinyFrontmatter(mdFile)
   const children = renderer.render(body)
 
   return {
     ...attributes,
     children,
-    docOutline,
-    titleSlug: slugify(attributes.title),
+    outline: generatedOutline,
+    slug: slugify(attributes.title),
   }
 }

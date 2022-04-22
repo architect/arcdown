@@ -5,21 +5,37 @@ import render from '../index.mjs'
 const file = readFileSync(`${new URL('.', import.meta.url).pathname}/example.md`, 'utf8')
 
 const options = {
-  markdownIt: {
-    // set options for base Markdown renderer
-    linkify: false,
+  // register hljs built-in languages with a string
+  // or a custom language as a tuple
+  hljs: {
+    classString: 'hljs mb0 mb1-lg relative',
+    languages: [
+      'javascript',
+      [ 'arc', '@architect/syntaxes/arc-hljs-grammar.js' ],
+    ],
   },
-  markdownItTocAndAnchor: {
-    // set options for toc and anchor plugin
-    tocClassName: 'pageToC',
-  },
-  markdownItClass: {
+  // set options for Markdown renderer
+  markdownIt: { linkify: false },
+  // override default plugins default options
+  options: {
+    // set options for toc plugin
+    markdownItTocAndAnchor: { tocClassName: 'pageToC' },
     // set options for markdown-it-class plugin
-    // in this case, that's an element => class map
-    h2: [ 'title' ],
-    p: [ 'prose' ],
+    markdownItClass: {
+      // in this case, that's an element => class map
+      h2: [ 'title' ],
+      p: [ 'prose' ],
+    },
   },
+  plugins: [
+    // add custom plugins
+    [],
+  ]
 }
 
-const doc = render(file, options)
-console.log(doc)
+async function main () {
+  const doc = await render(file, options)
+  console.log(doc)
+}
+
+main()

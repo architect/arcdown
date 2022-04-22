@@ -4,6 +4,7 @@
   "description": "",
   "main": "renderer.js",
   "scripts": {
+    "lint": "eslint ./**/*.mjs --fix",
     "test": "tape 'test/**/*.js' | tap-arc"
   },
   "author": "",
