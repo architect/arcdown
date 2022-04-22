@@ -1,6 +1,6 @@
 {
-  "name": "arc-plugin-render-md",
-  "version": "0.0.1",
+  "name": "@architect/arc-plugin-render-md",
+  "version": "0.0.2",
   "description": "",
   "main": "renderer.js",
   "scripts": {
