@@ -8,17 +8,27 @@
   },
   "author": "",
   "license": "Apache-2.0",
+  "files": [
+    "index.mjs"
+  ],
   "dependencies": {
     "@architect/syntaxes": "github:architect/syntaxes#v1.2.1",
     "highlight.js": "^11.5.1",
     "markdown-it": "^13.0.0",
     "markdown-it-external-anchor": "^1.0.0",
-    "markdown-it-toc-and-anchor": "github:macdonst/markdown-it-toc-and-anchor",
-    "querystring": "^0.2.1",
+    "markdown-it-toc-and-anchor": "^4.2.0",
     "tiny-frontmatter": "^1.0.0"
   },
   "devDependencies": {
+    "@architect/eslint-config": "^2.0.1",
+    "eslint": "^8.13.0",
     "tap-arc": "^0.3.4",
     "tape": "^5.5.3"
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "sourceType": "module"
+    },
+    "extends": "@architect/eslint-config"
   }
 }
