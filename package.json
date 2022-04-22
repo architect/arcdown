@@ -1,5 +1,5 @@
 {
-  "name": "@architect/arc-plugin-render-md",
+  "name": "@architect/arc-render-md",
   "version": "0.0.3",
   "description": "",
   "main": "renderer.js",
