@@ -1,0 +1,20 @@
+{
+  "name": "arc-plugin-render-md",
+  "version": "0.0.1",
+  "description": "",
+  "main": "renderer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@architect/syntaxes": "github:architect/syntaxes#v1.2.1",
+    "highlight.js": "^11.5.1",
+    "markdown-it": "^13.0.0",
+    "markdown-it-external-anchor": "^1.0.0",
+    "markdown-it-toc-and-anchor": "github:macdonst/markdown-it-toc-and-anchor",
+    "querystring": "^0.2.1",
+    "tiny-frontmatter": "^1.0.0"
+  }
+}
