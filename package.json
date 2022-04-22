@@ -4,7 +4,7 @@
   "description": "",
   "main": "renderer.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tape 'test/**/*.js' | tap-arc"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -16,5 +16,9 @@
     "markdown-it-toc-and-anchor": "github:macdonst/markdown-it-toc-and-anchor",
     "querystring": "^0.2.1",
     "tiny-frontmatter": "^1.0.0"
+  },
+  "devDependencies": {
+    "tap-arc": "^0.3.4",
+    "tape": "^5.5.3"
   }
 }
