@@ -11,5 +11,5 @@ jobs:
         with:
           node-version: '14'
       - run: npm i -g npm@8
-      - run: npm i
+      - run: npm i --legacy-peer-deps
       - run: npm t
