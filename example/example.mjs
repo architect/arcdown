@@ -1,19 +1,19 @@
 import { URL } from 'url'
 import { readFileSync, writeFileSync } from 'fs'
 import markdownItAttrs from 'markdown-it-attrs'
-import markdownitEmoji from 'markdown-it-emoji'
+import markdownItEmoji from 'markdown-it-emoji'
 import render from '../index.mjs'
 
 // read the sample markdown file
 const file = readFileSync(`${new URL('.', import.meta.url).pathname}/example.md`, 'utf8')
 
 const options = {
-  // register hljs built-in languages with a string
-  // or a custom language as a tuple
   hljs: {
     classString: 'hljs mb0 mb1-lg relative',
     languages: [
-      'javascript',
+      // register hljs built-in languages with a string
+      'typescript',
+      // or a custom language as an object
       { 'arc': '@architect/syntaxes/arc-hljs-grammar.js' },
       // array tuple also supported
       // [ 'arc', '@architect/syntaxes/arc-hljs-grammar.js' ]
@@ -40,7 +40,7 @@ const options = {
     // verbose definition -- key name doesn't matter
     mdMoji: [
       // the plugin function:
-      markdownitEmoji,
+      markdownItEmoji,
       // with options:
       {
         shortcuts: { 'laughing': ':D' }

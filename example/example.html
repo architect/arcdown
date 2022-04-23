@@ -23,7 +23,7 @@
       <ul class="pageToC">
 <li><a href="#code-blocks">Code Blocks</a>
 <ul>
-<li><a href="#some-jabbascript">Some Jabbascript</a></li>
+<li><a href="#some-typescript">Some Typescript</a></li>
 <li><a href="#custom-syntax">Custom syntax</a></li>
 <li><a href="#unknown-languages">Unknown languages</a></li>
 </ul>
@@ -44,12 +44,18 @@ https://arc.codes &lt;-- this won’t be linkified because the <code>linkify</co
 Here’s a link, just in case: <a href="https://arc.codes">Architect</a>. It won’t have <code>target=&quot;_blank&quot;</code> because “markdown-it-external-anchor” is disabled.</p>
 <p class="prose">Oh, look! “Smart quotes”, because <code>typographer</code> is set to true by default.</p>
 <h2 class="title" id="code-blocks">Code Blocks</h2>
-<h3 id="some-jabbascript">Some Jabbascript</h3>
-<pre class="hljs mb0 mb1-lg relative"><code data-language="javascript"><span class="hljs-keyword">import</span> { <span class="hljs-built_in">escape</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;querystring&#x27;</span>
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">slugify</span> (s) {
-  <span class="hljs-keyword">return</span> <span class="hljs-built_in">escape</span>(<span class="hljs-title class_">String</span>(s).<span class="hljs-title function_">trim</span>().<span class="hljs-title function_">toLowerCase</span>().<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">&#x27;-&#x27;</span>).<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\(\)/g</span>, <span class="hljs-string">&#x27;&#x27;</span>))
+<h3 id="some-typescript">Some Typescript</h3>
+<pre class="hljs mb0 mb1-lg relative"><code data-language="typescript"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Point</span> {
+  <span class="hljs-attr">x</span>: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">y</span>: <span class="hljs-built_in">number</span>;
 }
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">logPoint</span>(<span class="hljs-params">p: Point</span>) {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${p.x}</span>, <span class="hljs-subst">${p.y}</span>`</span>);
+}
+
+<span class="hljs-keyword">const</span> point = { <span class="hljs-attr">x</span>: <span class="hljs-number">12</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">26</span> };
+<span class="hljs-title function_">logPoint</span>(point);
 </code></pre>
 <h3 id="custom-syntax">Custom syntax</h3>
 <p class="prose">Architect manifest files are rendered with a provided syntax definition:</p>
