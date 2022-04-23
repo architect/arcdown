@@ -20,6 +20,7 @@ const options = {
       // disable a default language
       { 'powershell': false },
     ],
+    ignoreIllegals: false,
   },
   // set options for Markdown renderer
   markdownIt: { linkify: false },

@@ -14,19 +14,19 @@
 
 This is an opinionated toolchain to create technical content from Markdown source files as quickly as possible to enable on-the-fly rendering in a Lambda runtime.
 
-Included are 3 `markdown-it` plugins (to provide a table of contents, map CSS classes to elements, and handle external links), a syntax highlighter, frontmatter parsing, and some convenient return values.
+Included are three `markdown-it` plugins (to provide a table of contents, map CSS classes to elements, and handle external links), a syntax highlighter, frontmatter parsing, and some convenient return values.
 
 These built-ins are configurable and the chain of plugins can be extended by the user.
 
 ## Installation
 
-```sh
+```
 npm i arc-render-md
 ```
 
 ## Usage
 
-```js
+```javascript
 import render from 'arc-render-md'
 
 const doc = `
@@ -44,7 +44,7 @@ lorem ipsum _dolor_ sit **amet**
 [Architect](https://arc.codes/)
 `
 
-const { html } = await render(doc)
+const { html, tocHtml, title, slug } = await render(doc)
 ```
 
 See ./example/ for a kitchen sink demo.
@@ -62,7 +62,7 @@ See ./example/ for a kitchen sink demo.
 - `...` all remaining frontmatter. possibly empty
   - passed straight from the [`tiny-frontmatter` parser](https://github.com/rjreed/tiny-frontmatter)
 
-```js
+```javascript
 import render from 'arc-render-md'
 
 const {
@@ -84,7 +84,7 @@ However, the renderer is customizable and extensible.
 
 Set config for [the `markdown-it` renderer](https://github.com/markdown-it/markdown-it):
 
-```js
+```javascript
 const options = {
   // set options for Markdown renderer
   markdownIt: { linkify: false },
@@ -93,11 +93,11 @@ const options = {
 
 By default, these options are enabled:
 
-```json
+```javascripton
 {
-  html: true,
-  linkify: true,
-  typographer: true,
+  "html": true,
+  "linkify": true,
+  "typographer": true
 }
 ```
 
@@ -112,7 +112,7 @@ Three plugins are provided out-of-the-box and applied in the following order:
 Set configuration for each plugin by adding a keyed object to `options.pluginOverrides`.  
 Disable a plugin by setting its key in `pluginOverrides` to `false`.
 
-```js
+```javascript
 const options = {
   pluginOverrides: {
     // set options for toc plugin
@@ -129,12 +129,30 @@ const options = {
 }
 ```
 
+#### Plugin defaults
+
+`markdown-it-toc-and-anchor` is pre-configured with:
+
+```json
+{
+  "anchorLink": false,
+  "tocFirstLevel": 2,
+  "tocLastLevel": 6,
+  "tocClassName": 'docToc'
+}
+```
+
+`markdown-it-class` has no default class mapping configuration and will be skipped if a config object is not provided.
+
+`markdown-it-external-anchor` is not specifically configured here and maintains the package defaults.
+
 ### highlight.js config
 
-A custom `highlight()` method derived from [highlight.js](https://highlightjs.org/) is provided to the `markdown-it`  renderer.  
+A custom `highlight()` method supported by [highlight.js](https://highlightjs.org/) is provided to the `markdown-it`  renderer.  
+`ignoreIllegals: true` is the default, but can be set by the user.
 The provided `hljs` instance has 8 registered languages out of the box. A language can be disabled and additional syntaxes can be added in 2 ways:
 
-```js
+```javascript
 const options = {
   hljs: {
     classString: 'hljs relative mb-2',
@@ -146,6 +164,7 @@ const options = {
       // disable a default language
       { 'powershell': false },
     ],
+    ignoreIllegals: false,
   },
 }
 ```
@@ -154,7 +173,7 @@ Default registered languages include `bash`, `javascript`, `json`, `powershell`,
 
 ### User-provided plugins
 
-```js
+```javascript
 import markdownItAttrs from 'markdown-it-attrs'
 import markdownItEmoji from 'markdown-it-emoji'
 import render from 'arc-render-md'

@@ -7,7 +7,7 @@ const CATEGORY = 'Testing'
 const DESCRIPTION = 'Make sure we get Markdown'
 const HLJS_CLASS = 'hljs'
 const TOC_CLASS = 'pageToC'
-const file = `
+const file = /* md */`
 ---
 title: ${TITLE}
 category: ${CATEGORY}
