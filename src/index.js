@@ -17,8 +17,8 @@ import markdownItTocAndAnchor from 'markdown-it-toc-and-anchor'
 import markdownItExternalAnchor from 'markdown-it-external-anchor'
 import tinyFrontmatter from 'tiny-frontmatter'
 
-import createHighlight from './lib/highlight.mjs'
-import markdownItClass from './lib/markdown-it-class.js'
+import createHighlight from './lib/highlight.js'
+import markdownItClass from './vendor/markdown-it-class.cjs'
 
 let tocHtml
 

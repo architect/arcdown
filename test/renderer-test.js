@@ -1,5 +1,5 @@
 import test from 'tape'
-import render from '../index.mjs'
+import render from '../src/index.js'
 
 const TITLE = 'Test Doc'
 const TITLE_SLUG = 'test-doc'

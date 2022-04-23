@@ -160,9 +160,9 @@ const options = {
       // register hljs built-in languages with a string
       'typescript',
       // external languages can be added as an object
-      { 'lean': 'highlightjs-lean' },
+      { lean: 'highlightjs-lean' },
       // disable a default language
-      { 'powershell': false },
+      { powershell: false },
     ],
     ignoreIllegals: false,
   },
@@ -187,7 +187,7 @@ const options = {
       // the plugin function:
       markdownItEmoji,
       // with options:
-      { shortcuts: { 'laughing': ':D' } },
+      { shortcuts: { laughing: ':D' } },
     ],
   },
 }
@@ -202,7 +202,7 @@ We are not married to any single component package or even to the core rendering
 ### Todo
 
 - [ ] additional testing
-- [ ] type defs
+- [x] type defs -- can be expanded
 - [ ] use forked toc plugin from macdonst
 - [ ] benchmarks (try against remark)
 - [ ] look for hljs perf increases

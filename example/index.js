@@ -2,7 +2,7 @@ import { URL } from 'url'
 import { readFileSync, writeFileSync } from 'fs'
 import markdownItAttrs from 'markdown-it-attrs'
 import markdownItEmoji from 'markdown-it-emoji'
-import render from '../index.mjs'
+import render from '../src/index.js'
 
 // read the sample markdown file
 const file = readFileSync(`${new URL('.', import.meta.url).pathname}/example.md`, 'utf8')
@@ -14,11 +14,11 @@ const options = {
       // register hljs built-in languages with a string
       'typescript',
       // or a custom language as an object
-      { 'lean': 'highlightjs-lean' },
+      { lean: 'highlightjs-lean' },
       // array tuple also supported
       // [ 'cshtml-razor', 'highlightjs-cshtml-razor' ],
       // disable a default language
-      { 'powershell': false },
+      { powershell: false },
     ],
     ignoreIllegals: false,
   },
@@ -46,7 +46,7 @@ const options = {
       markdownItEmoji,
       // with options:
       {
-        shortcuts: { 'laughing': ':D' }
+        shortcuts: { laughing: ':D' }
       },
     ],
   },
@@ -56,7 +56,6 @@ const options = {
 async function main () {
   // render markdown to html
   const result = await render(file, options)
-
   const {
     html,
     tocHtml,
