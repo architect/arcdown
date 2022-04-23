@@ -1,7 +1,10 @@
 import { URL } from 'url'
-import { readFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'fs'
+import markdownItAttrs from 'markdown-it-attrs'
+import markdownitEmoji from 'markdown-it-emoji'
 import render from '../index.mjs'
 
+// read the sample markdown file
 const file = readFileSync(`${new URL('.', import.meta.url).pathname}/example.md`, 'utf8')
 
 const options = {
@@ -11,7 +14,8 @@ const options = {
     classString: 'hljs mb0 mb1-lg relative',
     languages: [
       'javascript',
-      [ 'arc', '@architect/syntaxes/arc-hljs-grammar.js' ],
+      { 'arc': '@architect/syntaxes/arc-hljs-grammar.js' },
+      [ 'arc', '@architect/syntaxes/arc-hljs-grammar.js' ]
     ],
   },
   // set options for Markdown renderer
@@ -27,15 +31,62 @@ const options = {
       p: [ 'prose' ],
     },
   },
-  plugins: [
+  plugins: {
     // add custom plugins
-    [],
-  ]
+    markdownItAttrs,
+    // verbose definition -- key name doesn't matter
+    mdMoji: [
+      // the plugin function:
+      markdownitEmoji,
+      // with options:
+      {
+        shortcuts: { 'laughing': ':D' }
+      },
+    ],
+  },
 }
 
+// create an async function
 async function main () {
-  const doc = await render(file, options)
-  console.log(doc)
+  // render markdown to html
+  const result = await render(file, options)
+
+  const {
+    html,
+    outline,
+    slug,
+    title,
+  } = result
+
+  const doc = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${title}</title>
+    <style>
+      body {
+        display: grid;
+        grid-template-columns: minmax(150px, 25%) 1fr;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <h3>Navigation</h3>
+      ${outline}
+    </nav>
+    <main>
+      <h1>${title}</h1>
+      ${html}
+    </main>
+  </body>
+</html>`
+
+  writeFileSync(`${new URL('.', import.meta.url).pathname}/${slug}.html`, doc)
+
+  console.log(`Rendered "${title}" to ${slug}.html`)
 }
 
+// run the main function
 main()

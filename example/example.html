@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Example</title>
+    <style>
+      body {
+        display: grid;
+        grid-template-columns: minmax(150px, 25%) 1fr;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <h3>Navigation</h3>
+      <ul class="pageToC">
+<li><a href="#code-blocks">Code Blocks</a>
+<ul>
+<li><a href="#some-jabbascript">Some Jabbascript</a></li>
+<li><a href="#custom-syntax">Custom syntax</a></li>
+<li><a href="#unknown-languages">Unknown languages</a></li>
+</ul>
+</li>
+<li><a href="#user-provided-plugins">User-provided plugins</a>
+<ul>
+<li><a href="#block-attrs">Block <code>attrs</code></a></li>
+<li><a href="#emoji">emoji</a></li>
+</ul>
+</li>
+</ul>
+
+    </nav>
+    <main>
+      <h1>Example</h1>
+      <p class="prose">lorem ipsum <em>dolor</em> sit <strong>amet</strong><br>
+https://arc.codes &lt;-- this won’t be linkified because the <code>linkify</code> option was overridden.<br>
+Here’s a link, just in case: <a href="https://arc.codes" rel="noopener noreferrer" target="_blank">Architect</a>. It should have <code>target=&quot;_blank&quot;</code> because “markdown-it-external-anchor” is a default plugin.</p>
+<p class="prose">Oh, look! “Smart quotes”, because <code>typographer</code> is set to true by default.</p>
+<h2 class="title" id="code-blocks">Code Blocks</h2>
+<h3 id="some-jabbascript">Some Jabbascript</h3>
+<pre class="hljs mb0 mb1-lg relative"><code data-language="javascript"><span class="hljs-keyword">import</span> { <span class="hljs-built_in">escape</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;querystring&#x27;</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">slugify</span> (s) {
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">escape</span>(<span class="hljs-title class_">String</span>(s).<span class="hljs-title function_">trim</span>().<span class="hljs-title function_">toLowerCase</span>().<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">&#x27;-&#x27;</span>).<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\(\)/g</span>, <span class="hljs-string">&#x27;&#x27;</span>))
+}
+</code></pre>
+<h3 id="custom-syntax">Custom syntax</h3>
+<p class="prose">Architect manifest files are rendered with a provided syntax definition:</p>
+<pre class="hljs mb0 mb1-lg relative"><code data-language="arc"><span class="hljs-title">@app</span><span class="hljs-string">
+</span><span class="hljs-string">m</span><span class="hljs-string">a</span><span class="hljs-string">r</span><span class="hljs-string">k</span><span class="hljs-string">d</span><span class="hljs-string">o</span><span class="hljs-string">w</span><span class="hljs-string">n</span><span class="hljs-string">-</span><span class="hljs-string">a</span><span class="hljs-string">p</span><span class="hljs-string">p</span><span class="hljs-string">
+</span><span class="hljs-string">
+</span><span class="hljs-title">@http</span><span class="hljs-string">
+</span><span class="hljs-string">g</span><span class="hljs-string">e</span><span class="hljs-string">t</span><span class="hljs-string"> </span><span class="hljs-string">/</span><span class="hljs-string">d</span><span class="hljs-string">o</span><span class="hljs-string">c</span><span class="hljs-string">s</span><span class="hljs-string">/</span><span class="hljs-string">*</span><span class="hljs-string">
+</span><span class="hljs-string"></span></code></pre>
+<h3 id="unknown-languages">Unknown languages</h3>
+<pre class="hljs mb0 mb1-lg relative"><code data-language="cobol">IDENTIFICATION DIVISION.
+PROGRAM-ID. HELLOWRD.
+
+PROCEDURE DIVISION.
+DISPLAY &quot;HELLO WORLD&quot;.
+STOP RUN.
+</code></pre>
+<p class="prose">Cobol’s definition wasn’t added to this highlight.js instance, so this block is printed as-is.</p>
+<h2 class="title" id="user-provided-plugins">User-provided plugins</h2>
+<h3 id="block-attrs">Block <code>attrs</code></h3>
+<blockquote class="abe" id="Gettysburg">
+<p class="prose">Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal.</p>
+</blockquote>
+<p class="prose">Check out that added class and id attribute!</p>
+<h3 id="emoji">emoji</h3>
+<p class="prose">✨</p>
+<p class="prose">This emoji will be replaced with the manually added plugin. There’s even a shortcut for “<code>:D</code>”. It becomes 😆 as specified in the options.</p>
+
+    </main>
+  </body>
+</html>

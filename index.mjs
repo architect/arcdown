@@ -22,11 +22,12 @@ import markdownItClass from './lib/markdown-it-class.js'
 let generatedOutline
 
 export const defaultPlugins = {
-  markdownItClass: [ markdownItClass, {} ],
-  markdownItExternalAnchor: [ markdownItExternalAnchor, {} ],
+  markdownItClass,
+  markdownItExternalAnchor,
   markdownItTocAndAnchor: [
     // @ts-ignore
-    markdownItTocAndAnchor.default, {
+    markdownItTocAndAnchor.default,
+    {
       slugify,
       tocCallback: (_, __, tocHtml) => { generatedOutline = tocHtml },
       ...TOC_DEFAULTS,
@@ -47,23 +48,28 @@ export default async function (mdFile, rendererOptions = {}) {
   } = rendererOptions
 
   const renderer = new Markdown({
-    highlight: await createHighlight({ languages: hljs.languages, classString: hljs.classString }),
+    highlight: await createHighlight(hljs),
     ...MARKDOWN_DEFAULTS,
     ...markdownIt,
   })
 
   const allPlugins = { ...defaultPlugins, ...addedPlugins }
   for (const mdPlugin in allPlugins) {
-    let [ plugin, pluginOptions ] = allPlugins[mdPlugin]
-    if (plugin) renderer.use(plugin, { ...pluginOptions, ...addedOptions[mdPlugin] })
+    const plugin = allPlugins[mdPlugin]
+    let pluginFn = plugin
+    let pluginOptions = {}
+
+    if (Array.isArray(plugin))
+      [ pluginFn, pluginOptions ] = plugin
+
+    renderer.use(pluginFn, { ...pluginOptions, ...addedOptions[mdPlugin] })
   }
 
   const { attributes, body } = tinyFrontmatter(mdFile)
-  const children = renderer.render(body)
 
   return {
     ...attributes,
-    children,
+    html: renderer.render(body),
     outline: generatedOutline,
     slug: slugify(attributes.title),
   }
