@@ -5,7 +5,7 @@
 
 > ⚠️  Very much a work in progress!
 
-<!-- [![GitHub CI status](https://github.com/architect/arc-render-md/workflows/Node%20CI/badge.svg)](https://github.com/architect/arc-render-md/actions?query=workflow%3A%22Node+CI%22) -->
+[![GitHub CI status](https://github.com/architect/arc-render-md/workflows/Node%20CI/badge.svg)](https://github.com/architect/arc-render-md/actions?query=workflow%3A%22Node+CI%22)
 
 ## Usage
 
