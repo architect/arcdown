@@ -6,7 +6,7 @@ description: Ipsumi descriptionor.
 
 lorem ipsum _dolor_ sit **amet**  
 https://arc.codes <-- this won't be linkified because the `linkify` option was overridden.  
-Here's a link, just in case: [Architect](https://arc.codes). It should have `target="_blank"` because "markdown-it-external-anchor" is a default plugin.
+Here's a link, just in case: [Architect](https://arc.codes). It won't have `target="_blank"` because "markdown-it-external-anchor" is disabled.
 
 Oh, look! "Smart quotes", because `typographer` is set to true by default.
 

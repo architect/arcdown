@@ -5,7 +5,7 @@
   "main": "renderer.js",
   "scripts": {
     "lint": "eslint ./**/*.mjs --fix",
-    "test": "tape test/* | tap-arc"
+    "test": "npm run lint && tape test/* | tap-arc"
   },
   "author": "",
   "license": "Apache-2.0",

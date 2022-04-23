@@ -5,6 +5,8 @@ const TITLE = 'Test Doc'
 const TITLE_SLUG = 'test-doc'
 const CATEGORY = 'Testing'
 const DESCRIPTION = 'Make sure we get Markdown'
+const HLJS_CLASS = 'hljs'
+const TOC_CLASS = 'pageToC'
 const file = `
 ---
 title: ${TITLE}
@@ -35,8 +37,11 @@ get /
 test('custom Markdown renderer', async (t) => {
   const options = {
     hljs: {
-      classString: 'hljs mb0 mb1-lg relative',
-    }
+      classString: HLJS_CLASS,
+    },
+    pluginOverrides: {
+      markdownItTocAndAnchor: { tocClassName: TOC_CLASS },
+    },
   }
   const result = await render(file, options)
 
@@ -44,7 +49,7 @@ test('custom Markdown renderer', async (t) => {
     category,
     description,
     html,
-    outline,
+    tocHtml,
     slug,
     title,
   } = result
@@ -53,12 +58,13 @@ test('custom Markdown renderer', async (t) => {
   t.equal(category, CATEGORY, 'category attribute is present')
   t.equal(description, DESCRIPTION, 'description attribute is present')
   t.equal(slug, TITLE_SLUG, 'slug attribute is generated')
-  t.ok(typeof outline === 'string', 'outline is a string of HTML')
+  t.ok(typeof tocHtml === 'string', 'ToC is a string of HTML')
+  t.ok(tocHtml.indexOf(`class="${TOC_CLASS}`) > 0, 'ToC class is present')
   t.ok(typeof html === 'string', 'html is a string of HTML')
   t.ok(html.indexOf('id="create-a-new-project"') > 0, 'Headings are linkified')
   t.ok(html.indexOf('id="%24ubsection-2.1%3F"') > 0, 'Complex headings are linkified')
   t.ok(html.indexOf('target="_blank">AWS is great</a>') > 0, 'External link targets = blank')
-  t.ok(html.indexOf('<pre class="hljs ') > 0, 'highlight.js is working')
+  t.ok(html.indexOf(`<pre class="${HLJS_CLASS}`) > 0, 'highlight.js is working')
 
   t.end()
 })

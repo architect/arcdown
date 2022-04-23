@@ -22,7 +22,7 @@ const options = {
   // set options for Markdown renderer
   markdownIt: { linkify: false },
   // override default plugins default options
-  options: {
+  pluginOverrides: {
     // set options for toc plugin
     markdownItTocAndAnchor: { tocClassName: 'pageToC' },
     // set options for markdown-it-class plugin
@@ -31,6 +31,8 @@ const options = {
       h2: [ 'title' ],
       p: [ 'prose' ],
     },
+    // disable markdown-it-external-anchor plugin
+    markdownItExternalAnchor: false,
   },
   plugins: {
     // add custom plugins
@@ -54,7 +56,7 @@ async function main () {
 
   const {
     html,
-    outline,
+    tocHtml,
     slug,
     title,
   } = result
@@ -65,17 +67,23 @@ async function main () {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${title}</title>
+    <link rel="stylesheet" href="https://unpkg.com/highlight.js@11.5.1/styles/night-owl.css">
     <style>
       body {
+        font-family: system-ui;
+        padding: 1rem 3rem;
         display: grid;
         grid-template-columns: minmax(150px, 25%) 1fr;
+      }
+      .hljs {
+        padding: 1rem;
       }
     </style>
   </head>
   <body>
     <nav>
       <h3>Navigation</h3>
-      ${outline}
+      ${tocHtml}
     </nav>
     <main>
       <h1>${title}</h1>

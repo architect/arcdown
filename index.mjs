@@ -19,7 +19,7 @@ import tinyFrontmatter from 'tiny-frontmatter'
 import createHighlight from './lib/highlight.mjs'
 import markdownItClass from './lib/markdown-it-class.js'
 
-let generatedOutline
+let tocHtml
 
 export const defaultPlugins = {
   markdownItClass,
@@ -29,7 +29,7 @@ export const defaultPlugins = {
     markdownItTocAndAnchor.default,
     {
       slugify,
-      tocCallback: (_, __, tocHtml) => { generatedOutline = tocHtml },
+      tocCallback: (_tocMarkdown, _tocArray, _tocHtml) => { tocHtml = _tocHtml },
       ...TOC_DEFAULTS,
     }
   ],
@@ -41,10 +41,10 @@ export function slugify (s) {
 
 export default async function (mdFile, rendererOptions = {}) {
   const {
-    hljs = {},                  // highlight.js languages and classes
-    markdownIt = {},            // override mardown-it options
-    options: addedOptions = {}, // override default plugins options
-    plugins: addedPlugins = {}, // add custom plugins
+    hljs = {},                   // highlight.js languages and classes
+    markdownIt = {},             // override markdown-it options
+    pluginOverrides = {},        // override default plugins options
+    plugins: addedPlugins = {},  // add custom plugins
   } = rendererOptions
 
   const renderer = new Markdown({
@@ -55,6 +55,11 @@ export default async function (mdFile, rendererOptions = {}) {
 
   const allPlugins = { ...defaultPlugins, ...addedPlugins }
   for (const mdPlugin in allPlugins) {
+    if (
+      mdPlugin in pluginOverrides
+      && pluginOverrides[mdPlugin] === false
+    ) continue
+
     const plugin = allPlugins[mdPlugin]
     let pluginFn = plugin
     let pluginOptions = {}
@@ -62,15 +67,16 @@ export default async function (mdFile, rendererOptions = {}) {
     if (Array.isArray(plugin))
       [ pluginFn, pluginOptions ] = plugin
 
-    renderer.use(pluginFn, { ...pluginOptions, ...addedOptions[mdPlugin] })
+    renderer.use(pluginFn, { ...pluginOptions, ...pluginOverrides[mdPlugin] })
   }
 
   const { attributes, body } = tinyFrontmatter(mdFile)
+  const html = renderer.render(body)
 
   return {
     ...attributes,
-    html: renderer.render(body),
-    outline: generatedOutline,
+    html,
+    tocHtml,
     slug: slugify(attributes.title),
   }
 }

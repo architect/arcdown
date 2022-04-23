@@ -29,7 +29,7 @@ const options = {
   // set options for Markdown renderer
   markdownIt: { linkify: false },
   // override default plugins default options
-  options: {
+  pluginOverrides: {
     // set options for toc plugin
     markdownItTocAndAnchor: { tocClassName: 'pageToC' },
     // set options for markdown-it-class plugin
@@ -56,10 +56,10 @@ const options = {
 
 // render markdown to html
 const {
-  html,    // the good stuff: HTML!
-  outline, // a table of contents
-  slug,    // a URL-friendly slug
-  title,   // document title from the frontmatter
+  html,     // the good stuff: HTML!
+  tocHtml,  // an HTML table of contents
+  slug,     // a URL-friendly slug
+  title,    // document title from the frontmatter
   // ... any other attributes from frontmatter
 } = await render(file, options)
 ```
