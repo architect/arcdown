@@ -38,6 +38,8 @@ const options = {
       h2: [ 'title' ],
       p: [ 'prose' ],
     },
+    // disable markdown-it-external-anchor plugin
+    markdownItExternalAnchor: false,
   },
   plugins: {
     // add custom plugins
