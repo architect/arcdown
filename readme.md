@@ -132,7 +132,7 @@ const options = {
 ### highlight.js config
 
 A custom `highlight()` method derived from [highlight.js](https://highlightjs.org/) is provided to the `markdown-it`  renderer.  
-The provided `hljs` instance has 0 registered languages out of the box. Additional syntaxes can be added in 2 ways:
+The provided `hljs` instance has 8 registered languages out of the box. A language can be disabled and additional syntaxes can be added in 2 ways:
 
 ```js
 const options = {
@@ -142,11 +142,15 @@ const options = {
       // register hljs built-in languages with a string
       'typescript',
       // external languages can be added as an object
-      { 'arc': '@architect/syntaxes/arc-hljs-grammar.js' },
+      { 'lean': 'highlightjs-lean' },
+      // disable a default language
+      { 'powershell': false },
     ],
   },
 }
 ```
+
+Default registered languages include `bash`, `javascript`, `json`, `powershell`, `python`, `ruby`, `yaml`, and `arc`.
 
 ### User-provided plugins
 
@@ -179,6 +183,7 @@ We are not married to any single component package or even to the core rendering
 ### Todo
 
 - [ ] additional testing
+- [ ] type defs
 - [ ] use forked toc plugin from macdonst
 - [ ] benchmarks (try against remark)
 - [ ] look for hljs perf increases

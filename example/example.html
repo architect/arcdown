@@ -10,7 +10,8 @@
         font-family: system-ui;
         padding: 1rem 3rem;
         display: grid;
-        grid-template-columns: minmax(150px, 25%) 1fr;
+        grid-template-columns: 1fr minmax(150px, 25%);
+        gap: 2rem;
       }
       .hljs {
         padding: 1rem;
@@ -18,25 +19,6 @@
     </style>
   </head>
   <body>
-    <nav>
-      <h3>Navigation</h3>
-      <ul class="pageToC">
-<li><a href="#code-blocks">Code Blocks</a>
-<ul>
-<li><a href="#some-typescript">Some Typescript</a></li>
-<li><a href="#custom-syntax">Custom syntax</a></li>
-<li><a href="#unknown-languages">Unknown languages</a></li>
-</ul>
-</li>
-<li><a href="#user-provided-plugins">User-provided plugins</a>
-<ul>
-<li><a href="#block-attrs">Block <code>attrs</code></a></li>
-<li><a href="#emoji">emoji</a></li>
-</ul>
-</li>
-</ul>
-
-    </nav>
     <main>
       <h1>Example</h1>
       <p class="prose">lorem ipsum <em>dolor</em> sit <strong>amet</strong><br>
@@ -58,15 +40,27 @@ Here’s a link, just in case: <a href="https://arc.codes">Architect</a>. It won
 <span class="hljs-title function_">logPoint</span>(point);
 </code></pre>
 <h3 id="custom-syntax">Custom syntax</h3>
-<p class="prose">Architect manifest files are rendered with a provided syntax definition:</p>
-<pre class="hljs mb0 mb1-lg relative"><code data-language="arc"><span class="hljs-title">@app</span><span class="hljs-string">
-</span><span class="hljs-string">m</span><span class="hljs-string">a</span><span class="hljs-string">r</span><span class="hljs-string">k</span><span class="hljs-string">d</span><span class="hljs-string">o</span><span class="hljs-string">w</span><span class="hljs-string">n</span><span class="hljs-string">-</span><span class="hljs-string">a</span><span class="hljs-string">p</span><span class="hljs-string">p</span><span class="hljs-string">
-</span><span class="hljs-string">
-</span><span class="hljs-title">@http</span><span class="hljs-string">
-</span><span class="hljs-string">g</span><span class="hljs-string">e</span><span class="hljs-string">t</span><span class="hljs-string"> </span><span class="hljs-string">/</span><span class="hljs-string">d</span><span class="hljs-string">o</span><span class="hljs-string">c</span><span class="hljs-string">s</span><span class="hljs-string">/</span><span class="hljs-string">*</span><span class="hljs-string">
-</span><span class="hljs-string"></span></code></pre>
+<p class="prose"><a href="https://leanprover.github.io/">Lean</a> is rendered with a provided syntax definition:</p>
+<pre class="hljs mb0 mb1-lg relative"><code data-language="lean"><span class="hljs-keyword">universe</span> u v
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">f</span> <span class="hljs-params">(α : <span class="hljs-built_in">Type</span> u)</span> <span class="hljs-params">(β : α → <span class="hljs-built_in">Type</span> v)</span> <span class="hljs-params">(a : α)</span> <span class="hljs-params">(b : β a)</span> <span class="hljs-symbol">:</span></span> (a : α) × β a <span class="hljs-symbol">:=</span>
+  ⟨a, b⟩
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">g</span> <span class="hljs-params">(α : <span class="hljs-built_in">Type</span> u)</span> <span class="hljs-params">(β : α → <span class="hljs-built_in">Type</span> v)</span> <span class="hljs-params">(a : α)</span> <span class="hljs-params">(b : β a)</span> <span class="hljs-symbol">:</span></span> Σ a : α, β a <span class="hljs-symbol">:=</span>
+  Sigma.mk a b
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">h1</span> <span class="hljs-params">(x : Nat)</span> <span class="hljs-symbol">:</span></span> Nat <span class="hljs-symbol">:=</span>
+  (f <span class="hljs-built_in">Type</span> (<span class="hljs-keyword">fun</span> α =&gt; α) Nat x).<span class="hljs-number">2</span>
+
+#eval h1 <span class="hljs-number">5</span> <span class="hljs-comment">-- 5</span>
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">h2</span> <span class="hljs-params">(x : Nat)</span> <span class="hljs-symbol">:</span></span> Nat <span class="hljs-symbol">:=</span>
+  (g <span class="hljs-built_in">Type</span> (<span class="hljs-keyword">fun</span> α =&gt; α) Nat x).<span class="hljs-number">2</span>
+
+#eval h2 <span class="hljs-number">5</span> <span class="hljs-comment">-- 5</span>
+</code></pre>
 <h3 id="unknown-languages">Unknown languages</h3>
-<pre class="hljs mb0 mb1-lg relative"><code data-language="cobol">IDENTIFICATION DIVISION.
+<pre class="hljs mb0 mb1-lg relative hljs-unregistered"><code data-language="cobol">IDENTIFICATION DIVISION.
 PROGRAM-ID. HELLOWRD.
 
 PROCEDURE DIVISION.
@@ -85,5 +79,24 @@ STOP RUN.
 <p class="prose">This emoji will be replaced with the manually added plugin. There’s even a shortcut for “<code>:D</code>”. It becomes 😆 as specified in the options.</p>
 
     </main>
+    <nav>
+      <h3>Navigation</h3>
+      <ul class="pageToC">
+<li><a href="#code-blocks">Code Blocks</a>
+<ul>
+<li><a href="#some-typescript">Some Typescript</a></li>
+<li><a href="#custom-syntax">Custom syntax</a></li>
+<li><a href="#unknown-languages">Unknown languages</a></li>
+</ul>
+</li>
+<li><a href="#user-provided-plugins">User-provided plugins</a>
+<ul>
+<li><a href="#block-attrs">Block <code>attrs</code></a></li>
+<li><a href="#emoji">emoji</a></li>
+</ul>
+</li>
+</ul>
+
+    </nav>
   </body>
 </html>

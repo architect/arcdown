@@ -8,6 +8,7 @@ const TOC_DEFAULTS = {
   anchorLink: false,
   tocFirstLevel: 2,
   tocLastLevel: 6,
+  tocClassName: 'docToc',
 }
 
 import { escape } from 'querystring'
@@ -53,8 +54,13 @@ export default async function (mdFile, rendererOptions = {}) {
     ...markdownIt,
   })
 
+  // don't apply classes if missing mapping
+  if (!pluginOverrides.markdownItClass)
+    delete defaultPlugins.markdownItClass
+
   const allPlugins = { ...defaultPlugins, ...addedPlugins }
   for (const mdPlugin in allPlugins) {
+    // skip disabled plugins
     if (
       mdPlugin in pluginOverrides
       && pluginOverrides[mdPlugin] === false

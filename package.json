@@ -2,7 +2,7 @@
   "name": "@architect/arc-render-md",
   "version": "0.0.3",
   "description": "",
-  "main": "renderer.js",
+  "main": "index.mjs",
   "scripts": {
     "lint": "eslint ./**/*.mjs --fix",
     "test": "npm run lint && tape test/* | tap-arc"
@@ -10,7 +10,8 @@
   "author": "",
   "license": "Apache-2.0",
   "files": [
-    "index.mjs"
+    "index.mjs",
+    "lib/"
   ],
   "dependencies": {
     "@architect/syntaxes": "github:architect/syntaxes#v1.2.1",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@architect/eslint-config": "^2.0.1",
     "eslint": "^8.13.0",
+    "highlightjs-lean": "^1.1.0",
     "markdown-it-attrs": "^4.1.3",
     "markdown-it-emoji": "^2.0.2",
     "tap-arc": "^0.3.4",

@@ -14,9 +14,11 @@ const options = {
       // register hljs built-in languages with a string
       'typescript',
       // or a custom language as an object
-      { 'arc': '@architect/syntaxes/arc-hljs-grammar.js' },
+      { 'lean': 'highlightjs-lean' },
       // array tuple also supported
-      // [ 'arc', '@architect/syntaxes/arc-hljs-grammar.js' ]
+      // [ 'cshtml-razor', 'highlightjs-cshtml-razor' ],
+      // disable a default language
+      { 'powershell': false },
     ],
   },
   // set options for Markdown renderer
@@ -73,7 +75,8 @@ async function main () {
         font-family: system-ui;
         padding: 1rem 3rem;
         display: grid;
-        grid-template-columns: minmax(150px, 25%) 1fr;
+        grid-template-columns: 1fr minmax(150px, 25%);
+        gap: 2rem;
       }
       .hljs {
         padding: 1rem;
@@ -81,14 +84,14 @@ async function main () {
     </style>
   </head>
   <body>
-    <nav>
-      <h3>Navigation</h3>
-      ${tocHtml}
-    </nav>
     <main>
       <h1>${title}</h1>
       ${html}
     </main>
+    <nav>
+      <h3>Navigation</h3>
+      ${tocHtml}
+    </nav>
   </body>
 </html>`
 
