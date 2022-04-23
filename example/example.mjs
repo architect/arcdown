@@ -15,7 +15,8 @@ const options = {
     languages: [
       'javascript',
       { 'arc': '@architect/syntaxes/arc-hljs-grammar.js' },
-      [ 'arc', '@architect/syntaxes/arc-hljs-grammar.js' ]
+      // array tuple also supported
+      // [ 'arc', '@architect/syntaxes/arc-hljs-grammar.js' ]
     ],
   },
   // set options for Markdown renderer
