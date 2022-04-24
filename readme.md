@@ -44,7 +44,7 @@ lorem ipsum _dolor_ sit **amet**
 [Architect](https://arc.codes/)
 `
 
-const { html, tocHtml, title, slug } = await render(doc)
+const { html, tocHtml, slug, title, category } = await render(doc)
 ```
 
 See ./example/ for a kitchen sink demo.
@@ -138,7 +138,7 @@ const options = {
   "anchorLink": false,
   "tocFirstLevel": 2,
   "tocLastLevel": 6,
-  "tocClassName": 'docToc'
+  "tocClassName": "docToc"
 }
 ```
 
