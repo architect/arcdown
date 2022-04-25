@@ -11,7 +11,6 @@ const TOC_DEFAULTS = {
   tocClassName: 'docToc',
 }
 
-import { escape } from 'querystring'
 import Markdown from 'markdown-it'
 import markdownItTocAndAnchor from 'markdown-it-toc-and-anchor'
 import markdownItExternalAnchor from 'markdown-it-external-anchor'
@@ -37,7 +36,7 @@ export const defaultPlugins = {
 }
 
 export function slugify (s) {
-  return escape(String(s).trim().toLowerCase().replace(/\s+/g, '-').replace(/\(\)/g, ''))
+  return encodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, '-'))
 }
 
 export default async function (mdFile, rendererOptions = {}) {
