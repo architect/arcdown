@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Example</title>
+    <link rel="stylesheet" href="https://unpkg.com/highlight.js@11.5.1/styles/night-owl.css">
+    <style>
+      body {
+        font-family: system-ui;
+        padding: 1rem 3rem;
+        display: grid;
+        grid-template-columns: 1fr minmax(150px, 25%);
+        gap: 2rem;
+      }
+      .hljs {
+        padding: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Example</h1>
+      <p class="prose">lorem ipsum <em>dolor</em> sit <strong>amet</strong><br>
+https://arc.codes &lt;-- this won’t be linkified because the <code>linkify</code> option was overridden.<br>
+Here’s a link, just in case: <a href="https://arc.codes">Architect</a>. It won’t have <code>target=&quot;_blank&quot;</code> because “markdown-it-external-anchor” is disabled.</p>
+<p class="prose">Oh, look! “Smart quotes”, because <code>typographer</code> is set to true by default.</p>
+<h2 class="title" id="code-blocks">Code Blocks</h2>
+<h3 id="some-typescript">Some Typescript</h3>
+<pre class="hljs mb0 mb1-lg relative"><code data-language="typescript"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Point</span> {
+  <span class="hljs-attr">x</span>: <span class="hljs-built_in">number</span>;
+  <span class="hljs-attr">y</span>: <span class="hljs-built_in">number</span>;
+}
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">logPoint</span>(<span class="hljs-params">p: Point</span>) {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${p.x}</span>, <span class="hljs-subst">${p.y}</span>`</span>);
+}
+
+<span class="hljs-keyword">const</span> point = { <span class="hljs-attr">x</span>: <span class="hljs-number">12</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">26</span> };
+<span class="hljs-title function_">logPoint</span>(point);
+</code></pre>
+<h3 id="custom-syntax">Custom syntax</h3>
+<p class="prose"><a href="https://leanprover.github.io/">Lean</a> is rendered with a provided syntax definition:</p>
+<pre class="hljs mb0 mb1-lg relative"><code data-language="lean"><span class="hljs-keyword">universe</span> u v
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">f</span> <span class="hljs-params">(α : <span class="hljs-built_in">Type</span> u)</span> <span class="hljs-params">(β : α → <span class="hljs-built_in">Type</span> v)</span> <span class="hljs-params">(a : α)</span> <span class="hljs-params">(b : β a)</span> <span class="hljs-symbol">:</span></span> (a : α) × β a <span class="hljs-symbol">:=</span>
+  ⟨a, b⟩
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">g</span> <span class="hljs-params">(α : <span class="hljs-built_in">Type</span> u)</span> <span class="hljs-params">(β : α → <span class="hljs-built_in">Type</span> v)</span> <span class="hljs-params">(a : α)</span> <span class="hljs-params">(b : β a)</span> <span class="hljs-symbol">:</span></span> Σ a : α, β a <span class="hljs-symbol">:=</span>
+  Sigma.mk a b
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">h1</span> <span class="hljs-params">(x : Nat)</span> <span class="hljs-symbol">:</span></span> Nat <span class="hljs-symbol">:=</span>
+  (f <span class="hljs-built_in">Type</span> (<span class="hljs-keyword">fun</span> α =&gt; α) Nat x).<span class="hljs-number">2</span>
+
+#eval h1 <span class="hljs-number">5</span> <span class="hljs-comment">-- 5</span>
+
+<span class="hljs-theorem"><span class="hljs-keyword">def</span> <span class="hljs-title">h2</span> <span class="hljs-params">(x : Nat)</span> <span class="hljs-symbol">:</span></span> Nat <span class="hljs-symbol">:=</span>
+  (g <span class="hljs-built_in">Type</span> (<span class="hljs-keyword">fun</span> α =&gt; α) Nat x).<span class="hljs-number">2</span>
+
+#eval h2 <span class="hljs-number">5</span> <span class="hljs-comment">-- 5</span>
+</code></pre>
+<h3 id="unknown-languages">Unknown languages</h3>
+<pre class="hljs mb0 mb1-lg relative hljs-unregistered"><code data-language="cobol">IDENTIFICATION DIVISION.
+PROGRAM-ID. HELLOWRD.
+
+PROCEDURE DIVISION.
+DISPLAY &quot;HELLO WORLD&quot;.
+STOP RUN.
+</code></pre>
+<p class="prose">Cobol’s definition wasn’t added to this highlight.js instance, so this block is printed as-is.</p>
+<h2 class="title" id="user-provided-plugins">User-provided plugins</h2>
+<h3 id="block-attrs">Block <code>attrs</code></h3>
+<blockquote class="abe" id="Gettysburg">
+<p class="prose">Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal.</p>
+</blockquote>
+<p class="prose">Check out that added class and id attribute!</p>
+<h3 id="emoji">emoji</h3>
+<p class="prose">✨</p>
+<p class="prose">This emoji will be replaced with the manually added plugin. There’s even a shortcut for “<code>:D</code>”. It becomes 😆 as specified in the options.</p>
+
+    </main>
+    <nav>
+      <h3>Navigation</h3>
+      <ul class="pageToC">
+<li><a href="#code-blocks">Code Blocks</a>
+<ul>
+<li><a href="#some-typescript">Some Typescript</a></li>
+<li><a href="#custom-syntax">Custom syntax</a></li>
+<li><a href="#unknown-languages">Unknown languages</a></li>
+</ul>
+</li>
+<li><a href="#user-provided-plugins">User-provided plugins</a>
+<ul>
+<li><a href="#block-attrs">Block <code>attrs</code></a></li>
+<li><a href="#emoji">emoji</a></li>
+</ul>
+</li>
+</ul>
+
+    </nav>
+  </body>
+</html>
