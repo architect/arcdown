@@ -55,7 +55,7 @@ export default async function (mdFile, rendererOptions = {}) {
 
   // don't apply classes if missing mapping
   if (!pluginOverrides.markdownItClass)
-    delete defaultPlugins.markdownItClass
+    pluginOverrides.markdownItClass = false
 
   const allPlugins = { ...defaultPlugins, ...addedPlugins }
   for (const mdPlugin in allPlugins) {
@@ -77,11 +77,13 @@ export default async function (mdFile, rendererOptions = {}) {
 
   const { attributes, body } = tinyFrontmatter(mdFile)
   const html = renderer.render(body)
+  const title = attributes.title || null
 
   return {
+    slug: title ? slugify(title) : null,
     ...attributes,
+    title,
     html,
     tocHtml,
-    slug: slugify(attributes.title),
   }
 }

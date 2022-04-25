@@ -1,20 +1,37 @@
 import hljs from 'highlight.js/lib/core'
 import Markdown from 'markdown-it'
 
-const DEFAULT_LANGUAGES = [
+const DEFAULT_LANGUAGES = new Set([
   'bash',
+  'css',
   'javascript',
   'json',
   'powershell',
   'python',
   'ruby',
   'yaml',
+  'xml', // for html
   { 'arc': '@architect/syntaxes/arc-hljs-grammar.js' }
-]
-const escapeHtml = Markdown().utils.escapeHtml // ? performance cost?
+])
+const escapeHtml = Markdown().utils.escapeHtml // ? instantiation performance cost?
 
 export default async function ({ languages = [], classString = 'hljs', ignoreIllegals = true } = {}) {
-  const allLanguages = [ ...DEFAULT_LANGUAGES, ...languages ]
+  let allLanguages = new Set(DEFAULT_LANGUAGES)
+
+  // ? add option to reset hljs languages
+  // ! this would have performance implications
+
+  for (const lang of languages) {
+    if (lang.constructor.name === 'Object') {
+      const name = Object.keys(lang)[0]
+      if (lang[name] === false) {
+        allLanguages.delete(name)
+        hljs.unregisterLanguage(name)
+      }
+      else allLanguages.add(lang)
+    }
+    else allLanguages.add(lang)
+  }
 
   for (const languageSpec of allLanguages) {
     let lang, languageName
@@ -23,16 +40,8 @@ export default async function ({ languages = [], classString = 'hljs', ignoreIll
       languageName = languageSpec
       lang = await import(`highlight.js/lib/languages/${languageSpec}`)
     }
-    else if (languageSpec.constructor.name === 'Array') {
-      languageName = languageSpec[0]
-      lang = await import(languageSpec[1])
-    }
     else if (languageSpec.constructor.name === 'Object') {
       languageName = Object.keys(languageSpec)[0]
-
-      // skip disabled languages
-      if (languageSpec[languageName] === false) continue
-
       lang = await import(languageSpec[languageName])
     }
 

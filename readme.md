@@ -201,9 +201,9 @@ We are not married to any single component package or even to the core rendering
 
 ### Todo
 
-- [ ] additional testing
+- [x] additional testing
 - [x] type defs -- can be expanded
-- [ ] use forked toc plugin from macdonst
-- [ ] benchmarks (try against remark)
+- [ ] use forked toc plugin from macdonst?
+- [x] benchmarks (try against remark)
 - [ ] look for hljs perf increases
 - [ ] web component enhancements 😏

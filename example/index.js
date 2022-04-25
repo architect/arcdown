@@ -15,8 +15,6 @@ const options = {
       'typescript',
       // or a custom language as an object
       { lean: 'highlightjs-lean' },
-      // array tuple also supported
-      // [ 'cshtml-razor', 'highlightjs-cshtml-razor' ],
       // disable a default language
       { powershell: false },
     ],
