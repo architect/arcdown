@@ -10,8 +10,6 @@
 
 ## [Architect](https://arc.codes)'s Markdown Renderer
 
-> ⚠️  Currently unreleased as it is very much a work in progress!
-
 This is an opinionated toolchain to create technical content from Markdown source files as quickly as possible to enable on-the-fly rendering in a Lambda runtime.
 
 Included are three `markdown-it` plugins (to provide a table of contents, map CSS classes to elements, and handle external links), a syntax highlighter, frontmatter parsing, and some convenient return values.

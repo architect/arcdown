@@ -1,12 +1,12 @@
 {
-  "name": "@architect/arc-render-md",
-  "version": "0.0.4",
+  "name": "arcdown",
+  "version": "0.0.3",
   "description": "A small stack of Markdown tools configured using the Architect's team preferred conventions.",
   "author": "",
-  "repository": "@architect/arc-render-md",
+  "repository": "@architect/arcdown",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/architect/arc-render-md/issues"
+    "url": "https://github.com/architect/arcdown/issues"
   },
   "type": "module",
   "scripts": {
