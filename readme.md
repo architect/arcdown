@@ -2,7 +2,7 @@
 ![Architect logo](https://github.com/architect/assets.arc.codes/raw/main/public/architect-logo-500b%402x.png#gh-light-mode-only)
 
 <p align="center">
-  <a href="https://github.com/architect/arc-render-md/actions?query=workflow%3A%22Node+CI%22"><img src=https://github.com/architect/arc-render-md/workflows/Node%20CI/badge.svg alt="GitHub CI status"></a>
+  <a href="https://github.com/architect/arcdown/actions?query=workflow%3A%22Node+CI%22"><img src=https://github.com/architect/arcdown/workflows/Node%20CI/badge.svg alt="GitHub CI status"></a>
   <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache-2.0 License"></a>
 </p>
 
@@ -21,13 +21,13 @@ These built-ins are configurable and the chain of plugins can be extended by the
 ## Installation
 
 ```
-npm i arc-render-md
+npm i arcdown
 ```
 
 ## Usage
 
 ```javascript
-import render from 'arc-render-md'
+import render from 'arcdown'
 
 const doc = `
 ---
@@ -51,7 +51,7 @@ See ./example/ for a kitchen sink demo.
 
 ## Result
 
-`arc-render-md` returns an object with 4 strings plus any frontmatter:
+`arcdown` returns an object with 4 strings plus any frontmatter:
 
 - `html` the Markdown document contents as HTML
   - the unmodified result from `markdown-it`
@@ -63,7 +63,7 @@ See ./example/ for a kitchen sink demo.
   - passed straight from the [`tiny-frontmatter` parser](https://github.com/rjreed/tiny-frontmatter)
 
 ```javascript
-import render from 'arc-render-md'
+import render from 'arcdown'
 
 const {
   html,     // the good stuff: HTML!
@@ -76,7 +76,7 @@ const {
 
 ## Configuration
 
-`arc-render-md` is set up to be used without any configuration. Out-of-the-box it uses defaults and conventions preferred by the Architect team.
+`arcdown` is set up to be used without any configuration. Out-of-the-box it uses defaults and conventions preferred by the Architect team.
 
 However, the renderer is customizable and extensible.
 
@@ -176,7 +176,7 @@ Default registered languages include `bash`, `javascript`, `json`, `powershell`,
 ```javascript
 import markdownItAttrs from 'markdown-it-attrs'
 import markdownItEmoji from 'markdown-it-emoji'
-import render from 'arc-render-md'
+import render from 'arcdown'
 
 const options = {
   plugins: {

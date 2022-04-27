@@ -8,7 +8,7 @@ import render, {
   DefaultPlugins,
   RenderResult,
   RendererOptions
-} from 'arc-render-md';
+} from 'arcdown';
 import MarkdownIt from 'markdown-it';
 // import markdownItAttrs from 'markdown-it-attrs' // no valid types
 // import markdownItEmoji from 'markdown-it-emoji' // no valid types

@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "arc-render-md": ["."]
+      "arcdown": ["."]
     }
   }
 }
