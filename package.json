@@ -1,6 +1,6 @@
 {
   "name": "@architect/arc-render-md",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A small stack of Markdown tools configured using the Architect's team preferred conventions.",
   "author": "",
   "repository": "@architect/arc-render-md",
