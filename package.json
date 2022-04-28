@@ -27,6 +27,7 @@
     "@architect/syntaxes": "github:architect/syntaxes#v1.2.1",
     "highlight.js": "^11.5.1",
     "markdown-it": "^13.0.0",
+    "markdown-it-arc-static-img": "^2.0.0",
     "markdown-it-external-anchor": "^1.0.0",
     "markdown-it-toc-and-anchor": "^4.2.0",
     "tiny-frontmatter": "^1.0.0"

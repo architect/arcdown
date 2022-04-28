@@ -14,6 +14,7 @@ const TOC_DEFAULTS = {
 import MarkdownIt from 'markdown-it'
 import markdownItTocAndAnchor from 'markdown-it-toc-and-anchor'
 import markdownItExternalAnchor from 'markdown-it-external-anchor'
+import markdownItArcStaticImg from 'markdown-it-arc-static-img'
 import tinyFrontmatter from 'tiny-frontmatter'
 
 import createHighlight from './lib/highlight.js'
@@ -24,6 +25,7 @@ let tocHtml
 const defaultPlugins = {
   markdownItClass,
   markdownItExternalAnchor,
+  markdownItArcStaticImg,
   markdownItTocAndAnchor: [
     // @ts-ignore
     markdownItTocAndAnchor.default,
