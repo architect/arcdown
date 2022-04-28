@@ -11,7 +11,7 @@ const TOC_DEFAULTS = {
   tocClassName: 'docToc',
 }
 
-import Markdown from 'markdown-it'
+import MarkdownIt from 'markdown-it'
 import markdownItTocAndAnchor from 'markdown-it-toc-and-anchor'
 import markdownItExternalAnchor from 'markdown-it-external-anchor'
 import tinyFrontmatter from 'tiny-frontmatter'
@@ -21,7 +21,7 @@ import markdownItClass from './vendor/markdown-it-class.cjs'
 
 let tocHtml
 
-export const defaultPlugins = {
+const defaultPlugins = {
   markdownItClass,
   markdownItExternalAnchor,
   markdownItTocAndAnchor: [
@@ -35,19 +35,20 @@ export const defaultPlugins = {
   ],
 }
 
-export function slugify (s) {
+function slugify (s) {
   return encodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, '-'))
 }
 
 export default async function (mdFile, rendererOptions = {}) {
   const {
-    hljs = {},                   // highlight.js languages and classes
-    markdownIt = {},             // override markdown-it options
-    pluginOverrides = {},        // override default plugins options
-    plugins: addedPlugins = {},  // add custom plugins
+    hljs = {},                       // highlight.js languages and classes
+    markdownIt = {},                 // override markdown-it options
+    pluginOverrides = {},            // override default plugins options
+    plugins: addedPlugins = {},      // add custom plugins
+    renderer: customRenderer = null, // override renderer
   } = rendererOptions
 
-  const renderer = new Markdown({
+  const renderer = customRenderer || new MarkdownIt({
     highlight: await createHighlight(hljs),
     ...MARKDOWN_DEFAULTS,
     ...markdownIt,
@@ -57,22 +58,24 @@ export default async function (mdFile, rendererOptions = {}) {
   if (!pluginOverrides.markdownItClass)
     pluginOverrides.markdownItClass = false
 
-  const allPlugins = { ...defaultPlugins, ...addedPlugins }
-  for (const mdPlugin in allPlugins) {
+  if (typeof renderer.use === 'function') {
+    const allPlugins = { ...defaultPlugins, ...addedPlugins }
+    for (const mdPlugin in allPlugins) {
     // skip disabled plugins
-    if (
-      mdPlugin in pluginOverrides
+      if (
+        mdPlugin in pluginOverrides
       && pluginOverrides[mdPlugin] === false
-    ) continue
+      ) continue
 
-    const plugin = allPlugins[mdPlugin]
-    let pluginFn = plugin
-    let pluginOptions = {}
+      const plugin = allPlugins[mdPlugin]
+      let pluginFn = plugin
+      let pluginOptions = {}
 
-    if (Array.isArray(plugin))
-      [ pluginFn, pluginOptions ] = plugin
+      if (Array.isArray(plugin))
+        [ pluginFn, pluginOptions ] = plugin
 
-    renderer.use(pluginFn, { ...pluginOptions, ...pluginOverrides[mdPlugin] })
+      renderer.use(pluginFn, { ...pluginOptions, ...pluginOverrides[mdPlugin] })
+    }
   }
 
   const { attributes, body } = tinyFrontmatter(mdFile)
@@ -87,3 +90,5 @@ export default async function (mdFile, rendererOptions = {}) {
     tocHtml,
   }
 }
+
+export { createHighlight, defaultPlugins, slugify }
