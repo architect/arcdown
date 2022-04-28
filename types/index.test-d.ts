@@ -3,6 +3,7 @@
 
 import { readFileSync } from 'fs';
 import render, {
+  createHighlight,
   defaultPlugins,
   slugify,
   DefaultPlugins,
@@ -26,11 +27,10 @@ async function test() {
   const options: RendererOptions = {
     hljs: {
       classString: 'hljs mb0 mb1-lg relative',
-      languages: [
-        'typescript',
-        { lean: 'highlightjs-lean' },
-        { powershell: false },
-      ],
+      languages: {
+        lean: 'highlightjs-lean',
+        powershell: false,
+      },
       ignoreIllegals: false,
     },
     markdownIt: { linkify: false },
@@ -57,6 +57,21 @@ async function test() {
   const { html, tocHtml, slug, title, foo } = extendedResult;
 
   foo?.bar;
+
+  const highlight = await createHighlight(
+    {
+      classString: 'sjlh',
+      languages: {
+        lean: 'highlightjs-lean',
+        powershell: false,
+      },
+    },
+    ['ruby', 'lean']
+  );
+  const customRendererOptions = {
+    renderer: new MarkdownIt({ highlight }),
+  };
+  const customRendererResult: RenderResult = await render(file, customRendererOptions);
 }
 
 test();

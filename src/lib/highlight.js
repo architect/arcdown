@@ -1,51 +1,61 @@
 import hljs from 'highlight.js/lib/core'
 import Markdown from 'markdown-it'
+import arcSyntax from '@architect/syntaxes/arc-hljs-grammar.js'
 
-const DEFAULT_LANGUAGES = new Set([
-  'bash',
-  'css',
-  'javascript',
-  'json',
-  'powershell',
-  'python',
-  'ruby',
-  'yaml',
-  'xml', // for html
-  { 'arc': '@architect/syntaxes/arc-hljs-grammar.js' }
-])
+const KNOWN_LANGUAGES = {
+  'arc': arcSyntax,
+  'html': 'highlight.js/lib/languages/xml',
+}
+
 const escapeHtml = Markdown().utils.escapeHtml // ? instantiation performance cost?
 
-export default async function ({ languages = [], classString = 'hljs', ignoreIllegals = true } = {}) {
-  let allLanguages = new Set(DEFAULT_LANGUAGES)
+export default async function (
+  { languages: providedLanguages = {}, classString = 'hljs', ignoreIllegals = true } = {},
+  foundLanguages = null,
+) {
+  const languageDefinitions = new Set()
+  const allLanguages = { ...KNOWN_LANGUAGES, ...providedLanguages }
 
-  // ? add option to reset hljs languages
-  // ! this would have performance implications
+  if (foundLanguages) {
+    for (const langName of foundLanguages) {
+      const isProvided = Object.keys(allLanguages).includes(langName)
+      const excluded = isProvided && !allLanguages[langName]
 
-  for (const lang of languages) {
-    if (lang.constructor.name === 'Object') {
-      const name = Object.keys(lang)[0]
-      if (lang[name] === false) {
-        allLanguages.delete(name)
-        hljs.unregisterLanguage(name)
-      }
-      else allLanguages.add(lang)
+      if (isProvided) languageDefinitions.add({ [langName]: allLanguages[langName] })
+      else if (!excluded) languageDefinitions.add(langName)
     }
-    else allLanguages.add(lang)
   }
 
-  for (const languageSpec of allLanguages) {
-    let lang, languageName
+  for (const langDef of languageDefinitions) {
+    let languageName, definitionFn
 
-    if (typeof languageSpec === 'string') {
-      languageName = languageSpec
-      lang = await import(`highlight.js/lib/languages/${languageSpec}`)
+    if (typeof langDef === 'string') {
+      languageName = langDef
+      try {
+        definitionFn = (await import(`highlight.js/lib/languages/${langDef}`)).default
+      }
+      catch (error) {
+        console.info(`Unable to import "${languageName}" from hljs`)
+      }
     }
-    else if (languageSpec.constructor.name === 'Object') {
-      languageName = Object.keys(languageSpec)[0]
-      lang = await import(languageSpec[languageName])
+    else if (langDef.constructor.name === 'Object') {
+      languageName = Object.keys(langDef)[0]
+
+      if (typeof langDef[languageName] === 'string') {
+        try {
+          definitionFn = (await import(langDef[languageName])).default
+        }
+        catch (error) {
+          console.info(`Unable to import "${languageName}" from "${langDef[languageName]}"`)
+        }
+      }
+      else {
+        definitionFn = langDef[languageName]
+      }
     }
 
-    hljs.registerLanguage(languageName, lang.default)
+    if (definitionFn)
+      hljs.registerLanguage(languageName, definitionFn)
   }
 
   return function (code, language) {

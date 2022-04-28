@@ -32,6 +32,12 @@ title: Hello world
 
 https://arc.codes
 
+\`\`\`javascript
+async function () {
+  console.log('Hello, world')
+}
+\`\`\`
+
 \`\`\`ruby
 def handler
   puts 'Hello, world'
@@ -40,14 +46,16 @@ end
 `.trim()
 
   const renderer = new MarkdownIt({
-    highlight: await createHighlight({
-      classString: CLASS_STRING,
-    })
+    highlight: await createHighlight(
+      { classString: CLASS_STRING },
+      [ 'ruby' ]
+    ),
   })
   const { html, slug, title, tocHtml } = await render(file, { renderer })
 
   t.ok(html.indexOf('href="https://arc.codes"') === -1, 'linkify is disabled')
-  t.ok(html.indexOf(`<pre class="${CLASS_STRING}"><code data-language="ruby">`) >= 0, 'highlight is enabled with custom options')
+  t.ok(html.indexOf(`<pre class="${CLASS_STRING}"><code data-language="ruby">`) >= 0, 'highlight is enabled for provided languages')
+  t.ok(html.indexOf(`<pre class="${CLASS_STRING} hljs-unregistered"><code data-language="javascript">`) >= 0, 'not provided languages are not highlighted')
   t.ok(title && slug, 'frontmatter is parsed and returned')
   t.ok(typeof tocHtml === 'string', 'ToC is a string of HTML')
 

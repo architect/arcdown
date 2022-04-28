@@ -2,9 +2,9 @@
 
 // TODO: types for each default plugin config
 export interface DefaultPlugins {
-  markdownItClass?: object | false;
-  markdownItExternalAnchor?: object | false;
-  markdownItTocAndAnchor?: object | false;
+  markdownItClass?: object | boolean;
+  markdownItExternalAnchor?: object | boolean;
+  markdownItTocAndAnchor?: object | boolean;
 }
 
 export interface RendererOptions {
@@ -12,11 +12,20 @@ export interface RendererOptions {
   hljs?: object;
   pluginOverrides?: DefaultPlugins;
   plugins?: object;
+  renderer?: {
+    render: (markdown: string) => string,
+    use?: any,
+  };
 }
 
 export const defaultPlugins: DefaultPlugins;
 
 export function slugify(s: string): string;
+
+export function createHighlight(
+  options: object,
+  foundLanguages: string[] | null
+): Promise<(code: any, language: any) => string>;
 
 export interface RenderResult {
   html: string;

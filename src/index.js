@@ -48,8 +48,18 @@ export default async function (mdFile, rendererOptions = {}) {
     renderer: customRenderer = null, // override renderer
   } = rendererOptions
 
+  const { attributes, body } = tinyFrontmatter(mdFile)
+
+  const foundLangs = new Set()
+  const fenceR = /`{3}(?:(.*$))?[\s\S]*?`{3}/gm
+  let match
+  do {
+    match = fenceR.exec(body)
+    if (match) foundLangs.add(match[1])
+  } while (match)
+
   const renderer = customRenderer || new MarkdownIt({
-    highlight: await createHighlight(hljs),
+    highlight: await createHighlight(hljs, foundLangs),
     ...MARKDOWN_DEFAULTS,
     ...markdownIt,
   })
@@ -78,7 +88,6 @@ export default async function (mdFile, rendererOptions = {}) {
     }
   }
 
-  const { attributes, body } = tinyFrontmatter(mdFile)
   const html = renderer.render(body)
   const title = attributes.title || null
 

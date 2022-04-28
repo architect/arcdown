@@ -4,6 +4,8 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "arcdown": "file:../",
+    "highlightjs-cshtml-razor": "^2.1.1",
     "highlightjs-lean": "^1.1.0",
     "markdown-it-attrs": "^4.1.3",
     "markdown-it-emoji": "^2.0.2"

@@ -4,15 +4,19 @@ category: Loremus Categorous
 description: Ipsumi descriptionor.
 ---
 
+## Defaults
+
 lorem ipsum _dolor_ sit **amet**  
 https://arc.codes <-- this won't be linkified because the `linkify` option was overridden.  
-Here's a link, just in case: [Architect](https://arc.codes). It won't have `target="_blank"` because "markdown-it-external-anchor" is disabled.
+Here's a link, just in case: [Architect](https://arc.codes). It won't have `target="_blank"` because the "markdown-it-external-anchor" plugin is disabled.
 
 Oh, look! "Smart quotes", because `typographer` is set to true by default.
 
-## Code Blocks
+## "Fenced" Code Blocks
 
-### Some Typescript
+### A highlight.js built-in language
+
+TypeScript is included in in the hljs library and can be automatically registered by `arcdown`.
 
 ```typescript
 interface Point {
@@ -28,7 +32,7 @@ const point = { x: 12, y: 26 };
 logPoint(point);
 ```
 
-### Custom syntax
+### User-provided custom syntax
 
 [Lean](https://leanprover.github.io/) is rendered with a provided syntax definition:
 
@@ -52,7 +56,41 @@ def h2 (x : Nat) : Nat :=
 #eval h2 5 -- 5
 ```
 
+### Another custom syntax
+
+[Razor](https://docs.microsoft.com/en-us/aspnet/core/mvc/views/razor) for ASP.NET Core
+
+```cshtml-razor
+@if (value % 2 == 0)
+{
+    <p>The value was even.</p>
+}
+else if (value >= 1337)
+{
+    <p>The value is large.</p>
+}
+else
+{
+    <p>The value is odd and small.</p>
+}
+```
+
 ### Unknown languages
+
+#### Built into `arcdown`
+
+```arc
+@app
+my-app
+
+@http
+get /foo
+post /foo
+```
+
+#### Completely unknown
+
+Cobol's definition isn't built into hljs and wasn't added by the user, so this block is printed as-is.
 
 ```cobol
 IDENTIFICATION DIVISION.
@@ -62,8 +100,6 @@ PROCEDURE DIVISION.
 DISPLAY "HELLO WORLD".
 STOP RUN.
 ```
-
-Cobol's definition wasn't added to this highlight.js instance, so this block is printed as-is.
 
 ## User-provided plugins
 
