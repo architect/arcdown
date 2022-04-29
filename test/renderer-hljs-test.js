@@ -29,10 +29,8 @@ test('renderer hljs options', async (t) => {
   const options = {
     hljs: {
       classString: HLJS_CLASS,
-      languages: [
-        { perl: false },
-        // TODO: test a custom syntax
-      ],
+      languages: { perl: false },
+      // TODO: test a custom syntax
     },
   }
 
