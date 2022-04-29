@@ -43,14 +43,12 @@ lorem ipsum _dolor_ sit **amet**
 `
 
 const {
-  frontmatter  // attributes from frontmatter
+  frontmatter, // attributes from frontmatter
   html,        // the good stuff: HTML!
   slug,        // a URL-friendly slug
   title,       // document title from the frontmatter
   tocHtml,     // an HTML table of contents
 } = await render(doc)
-
-
 ```
 
 See ./example/ for a kitchen sink demo.
@@ -72,7 +70,7 @@ See ./example/ for a kitchen sink demo.
 import render from 'arcdown'
 
 const {
-  frontmatter  // attributes from frontmatter
+  frontmatter, // attributes from frontmatter
   html,        // the good stuff: HTML!
   slug,        // a URL-friendly slug
   title,       // document title from the frontmatter
