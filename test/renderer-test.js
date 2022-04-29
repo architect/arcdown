@@ -1,57 +1,6 @@
 import test from 'tape'
 import render from '../src/index.js'
 
-test('renderer baseline with frontmatter', async (t) => {
-  const TITLE = 'Test Doc'
-  const TITLE_SLUG = 'test-doc'
-  const CATEGORY = 'Testing'
-  const DESCRIPTION = 'Make sure we get Markdown'
-  const LINK = 'https://arc.codes'
-  const file = /* md */`
----
-title: ${TITLE}
-category: ${CATEGORY}
-description: ${DESCRIPTION}
----
-
-> Architect is a simple tool to build and deliver powerful functional web apps and APIs
-
-Visit ${LINK} for more info.
-
-## Deploy to AWS
-
-[AWS](https://aws.amazon.com/) is a cloud computing platform that makes it easy to build, deploy, and manage applications and services.
-
-### $ubsection 2.1?
-
-## Section 3
-
-lorem ipsum dolor sit amet
-`.trim()
-
-  const {
-    category,
-    description,
-    html,
-    tocHtml,
-    slug,
-    title,
-  } = await render(file)
-
-  t.equal(title, TITLE, 'title attribute is present')
-  t.equal(category, CATEGORY, 'category attribute is present')
-  t.equal(description, DESCRIPTION, 'description attribute is present')
-  t.equal(slug, TITLE_SLUG, 'slug attribute is generated')
-  t.ok(typeof tocHtml === 'string', 'ToC is a string of HTML')
-  t.ok(typeof html === 'string', 'html is a string of HTML')
-  t.ok(html.indexOf('id="deploy-to-aws"') >= 0, 'Headings are linkified')
-  t.ok(html.indexOf('id="%24ubsection-2.1%3F"') >= 0, 'Complex headings are linkified')
-  t.ok(html.indexOf(`>${LINK}</a`) >= 0, 'link linkified')
-  t.ok(html.indexOf('target="_blank">AWS</a>') >= 0, 'External link targets = blank')
-
-  t.end()
-})
-
 test('renderer without frontmatter', async (t) => {
   const file = /* md */`
 ## Hello, World
@@ -86,34 +35,87 @@ Visit ${LINK} for more info.
   t.end()
 })
 
-test('renderer plugin overrides', async (t) => {
-  const TOC_CLASS = 'pageToC'
+test('renderer baseline with frontmatter', async (t) => {
+  const TITLE = 'Test Doc'
+  const TITLE_SLUG = 'test-doc'
+  const CATEGORY = 'Testing'
+  const DESCRIPTION = 'Make sure we get Markdown'
+  const LINK = 'https://arc.codes'
   const file = /* md */`
+---
+title: ${TITLE}
+category: ${CATEGORY}
+description: ${DESCRIPTION}
+---
+
+> Architect is a simple tool to build and deliver powerful functional web apps and APIs
+
+Visit ${LINK} for more info.
+
 ## Deploy to AWS
 
 [AWS](https://aws.amazon.com/) is a cloud computing platform that makes it easy to build, deploy, and manage applications and services.
+
+### $ubsection 2.1?
+
+## Section 3
+
+lorem ipsum dolor sit amet
 `.trim()
 
-  const options = {
-    pluginOverrides: {
-      markdownItTocAndAnchor: { tocClassName: TOC_CLASS },
-      markdownItClass: {
-        h2: [ 'title' ],
-        p: [ 'prose' ],
-      },
-      markdownItExternalAnchor: false,
-    },
-  }
-
   const {
+    frontmatter,
     html,
     tocHtml,
-  } = await render(file, options)
+    slug,
+    title,
+  } = await render(file)
 
-  t.ok(tocHtml.indexOf(`class="${TOC_CLASS}`) >= 0, 'ToC class is present')
-  t.ok(html.indexOf('target="_blank">AWS</a>') < 0, 'External link targets = blank')
-  t.ok(html.indexOf('<h2 class="title"') >= 0, 'h2.title')
-  t.ok(html.indexOf('<p class="prose"') >= 0, 'p.prose')
+  t.equal(title, TITLE, 'title attribute is present')
+  t.equal(typeof frontmatter, 'object', 'frontmatter is an object')
+  t.equal(frontmatter.title, TITLE, 'title attribute is present')
+  t.equal(frontmatter.category, CATEGORY, 'category attribute is present')
+  t.equal(frontmatter.description, DESCRIPTION, 'description attribute is present')
+  t.equal(slug, TITLE_SLUG, 'slug attribute is generated')
+  t.ok(typeof tocHtml === 'string', 'ToC is a string of HTML')
+  t.ok(typeof html === 'string', 'html is a string of HTML')
+  t.ok(html.indexOf('id="deploy-to-aws"') >= 0, 'Headings are linkified')
+  t.ok(html.indexOf('id="%24ubsection-2.1%3F"') >= 0, 'Complex headings are linkified')
+  t.ok(html.indexOf(`>${LINK}</a`) >= 0, 'link linkified')
+  t.ok(html.indexOf('target="_blank">AWS</a>') >= 0, 'External link targets = blank')
+
+  t.end()
+})
+
+test('weird strings in frontmatter', async (t) => {
+  const file = /* md */`
+---
+title: "Using GitHub Actions with Architect"
+image: 'post-assets/gh-actions.png'
+category: ci-cd
+description: "GitHub Actions is a "continuous integration" and continuous delivery (CI/CD) platform."
+author: 'Simon MacDonald'
+avatar: simon.png
+published: 'April 22, 2022'
+---
+
+## Mmmm... YAML...
+
+`.trim()
+  const expected = {
+    title: 'Using GitHub Actions with Architect',
+    image: 'post-assets/gh-actions.png',
+    category: 'ci-cd',
+    description: 'GitHub Actions is a "continuous integration" and continuous delivery (CI/CD) platform.',
+    author: 'Simon MacDonald',
+    avatar: 'simon.png',
+    published: 'April 22, 2022',
+  }
+
+  const { frontmatter, slug } = await render(file)
+
+  t.deepEqual(frontmatter, expected, 'frontmatter is parsed correctly')
+  t.equal(slug, 'using-github-actions-with-architect', 'slug is generated correctly')
 
   t.end()
 })
@@ -130,10 +132,11 @@ slug: ${CUSTOM_SLUG}
 lorem ipsum dolor sit amet
 `.trim()
 
-  const { title, slug } = await render(file)
+  const { frontmatter, slug, title } = await render(file)
 
   t.equal(title, TITLE, 'title attribute is present')
   t.equal(slug, CUSTOM_SLUG, 'slug is customized')
+  t.equal(frontmatter.slug, CUSTOM_SLUG, 'slug is also on frontmatter')
 
   t.end()
 })

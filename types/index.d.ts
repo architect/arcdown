@@ -32,10 +32,7 @@ export interface RenderResult {
   tocHtml: string;
   title?: string;
   slug?: string;
-}
-
-export interface RenderResult {
-  [prop: string]: any;
+  frontmatter?: Record<string, any>;
 }
 
 export default function render(

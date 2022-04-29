@@ -89,14 +89,23 @@ export default async function (mdFile, rendererOptions = {}) {
   }
 
   const html = renderer.render(body)
-  const title = attributes.title || null
+
+  if (attributes) {
+    for (const attr in attributes) {
+      const value = attributes[attr]
+      attributes[attr] = value.replace(/^"|"$|^'|'$/g, '')
+    }
+  }
+
+  let { slug, title } = attributes
+  if (!slug) slug = title ? slugify(title) : null
 
   return {
-    slug: title ? slugify(title) : null,
-    ...attributes,
     title,
     html,
     tocHtml,
+    slug,
+    frontmatter: attributes,
   }
 }
 

@@ -54,9 +54,9 @@ async function test() {
   const file = readFileSync('./test.md', 'utf8');
 
   const extendedResult: RenderResult = await render(file, options);
-  const { html, tocHtml, slug, title, foo } = extendedResult;
+  const { html, tocHtml, slug, title, frontmatter } = extendedResult;
 
-  foo?.bar;
+  frontmatter?.foo === 'bar';
 
   const highlight = await createHighlight(
     {
