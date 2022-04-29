@@ -92,10 +92,10 @@ test('weird strings in frontmatter', async (t) => {
 ---
 title: "Using GitHub Actions with Architect"
 image: 'post-assets/gh-actions.png'
-category: book-club
-description: "GitHub Actions is a continuous integration and continuous delivery (CI/CD) platform that allows you to automate your build, test, and deployment pipeline. We’ve recently created some composite actions to test every pull request to your repository and deploy tagged releases to production."
+category: ci-cd
+description: "GitHub Actions is a "continuous integration" and continuous delivery (CI/CD) platform."
 author: 'Simon MacDonald'
-avatar: 'simon.png'
+avatar: simon.png
 published: 'April 22, 2022'
 ---
 
@@ -105,8 +105,8 @@ published: 'April 22, 2022'
   const expected = {
     title: 'Using GitHub Actions with Architect',
     image: 'post-assets/gh-actions.png',
-    category: 'book-club',
-    description: 'GitHub Actions is a continuous integration and continuous delivery (CI/CD) platform that allows you to automate your build, test, and deployment pipeline. We’ve recently created some composite actions to test every pull request to your repository and deploy tagged releases to production.',
+    category: 'ci-cd',
+    description: 'GitHub Actions is a "continuous integration" and continuous delivery (CI/CD) platform.',
     author: 'Simon MacDonald',
     avatar: 'simon.png',
     published: 'April 22, 2022',
