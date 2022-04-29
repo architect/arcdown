@@ -1,5 +1,6 @@
 import { URL } from 'url'
 import { readFileSync, writeFileSync } from 'fs'
+import razorSyntax from 'highlightjs-cshtml-razor'
 import leanSyntax from 'highlightjs-lean'
 import markdownItAttrs from 'markdown-it-attrs'
 import markdownItEmoji from 'markdown-it-emoji'
@@ -14,8 +15,7 @@ const options = {
     languages: {
       // directly provide the definition function
       lean: leanSyntax,
-      // or the import path for the definition
-      'cshtml-razor': 'highlightjs-cshtml-razor',
+      'cshtml-razor': razorSyntax,
     },
     ignoreIllegals: false,
   },
