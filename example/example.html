@@ -21,12 +21,14 @@
   <body>
     <main>
       <h1>Example</h1>
-      <p class="prose">lorem ipsum <em>dolor</em> sit <strong>amet</strong><br>
+      <h2 class="title" id="defaults">Defaults</h2>
+<p class="prose">lorem ipsum <em>dolor</em> sit <strong>amet</strong><br>
 https://arc.codes &lt;-- this won’t be linkified because the <code>linkify</code> option was overridden.<br>
-Here’s a link, just in case: <a href="https://arc.codes">Architect</a>. It won’t have <code>target=&quot;_blank&quot;</code> because “markdown-it-external-anchor” is disabled.</p>
+Here’s a link, just in case: <a href="https://arc.codes">Architect</a>. It won’t have <code>target=&quot;_blank&quot;</code> because the “markdown-it-external-anchor” plugin is disabled.</p>
 <p class="prose">Oh, look! “Smart quotes”, because <code>typographer</code> is set to true by default.</p>
-<h2 class="title" id="code-blocks">Code Blocks</h2>
-<h3 id="some-typescript">Some Typescript</h3>
+<h2 class="title" id="%E2%80%9Cfenced%E2%80%9D-code-blocks">“Fenced” Code Blocks</h2>
+<h3 id="a-highlight.js-built-in-language">A highlight.js built-in language</h3>
+<p class="prose">TypeScript is included in in the hljs library and can be automatically registered by <code>arcdown</code>.</p>
 <pre class="hljs mb0 mb1-lg relative"><code data-language="typescript"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Point</span> {
   <span class="hljs-attr">x</span>: <span class="hljs-built_in">number</span>;
   <span class="hljs-attr">y</span>: <span class="hljs-built_in">number</span>;
@@ -39,7 +41,7 @@ Here’s a link, just in case: <a href="https://arc.codes">Architect</a>. It won
 <span class="hljs-keyword">const</span> point = { <span class="hljs-attr">x</span>: <span class="hljs-number">12</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">26</span> };
 <span class="hljs-title function_">logPoint</span>(point);
 </code></pre>
-<h3 id="custom-syntax">Custom syntax</h3>
+<h3 id="user-provided-custom-syntax">User-provided custom syntax</h3>
 <p class="prose"><a href="https://leanprover.github.io/">Lean</a> is rendered with a provided syntax definition:</p>
 <pre class="hljs mb0 mb1-lg relative"><code data-language="lean"><span class="hljs-keyword">universe</span> u v
 
@@ -59,7 +61,32 @@ Here’s a link, just in case: <a href="https://arc.codes">Architect</a>. It won
 
 #eval h2 <span class="hljs-number">5</span> <span class="hljs-comment">-- 5</span>
 </code></pre>
+<h3 id="another-custom-syntax">Another custom syntax</h3>
+<p class="prose"><a href="https://docs.microsoft.com/en-us/aspnet/core/mvc/views/razor">Razor</a> for ASP.NET Core</p>
+<pre class="hljs mb0 mb1-lg relative"><code data-language="cshtml-razor"><span class="hljs-built_in">@</span>if (value % 2 == 0)
+<span class="hljs-built_in">{</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>The value was even.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-built_in">}</span>
+else if (value &gt;= 1337)
+{
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>The value is large.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-built_in">}</span>
+else
+<span class="hljs-built_in">{</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>The value is odd and small.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-built_in">}</span>
+</code></pre>
 <h3 id="unknown-languages">Unknown languages</h3>
+<h4 id="built-into-arcdown">Built into <code>arcdown</code></h4>
+<pre class="hljs mb0 mb1-lg relative"><code data-language="arc"><span class="hljs-title">@app</span><span class="hljs-string">
+</span><span class="hljs-string">m</span><span class="hljs-string">y</span><span class="hljs-string">-</span><span class="hljs-string">a</span><span class="hljs-string">p</span><span class="hljs-string">p</span><span class="hljs-string">
+</span><span class="hljs-string">
+</span><span class="hljs-title">@http</span><span class="hljs-string">
+</span><span class="hljs-string">g</span><span class="hljs-string">e</span><span class="hljs-string">t</span><span class="hljs-string"> </span><span class="hljs-string">/</span><span class="hljs-string">f</span><span class="hljs-string">o</span><span class="hljs-string">o</span><span class="hljs-string">
+</span><span class="hljs-string">p</span><span class="hljs-string">o</span><span class="hljs-string">s</span><span class="hljs-string">t</span><span class="hljs-string"> </span><span class="hljs-string">/</span><span class="hljs-string">f</span><span class="hljs-string">o</span><span class="hljs-string">o</span><span class="hljs-string">
+</span><span class="hljs-string"></span></code></pre>
+<h4 id="completely-unknown">Completely unknown</h4>
+<p class="prose">Cobol’s definition isn’t built into hljs and wasn’t added by the user, so this block is printed as-is.</p>
 <pre class="hljs mb0 mb1-lg relative hljs-unregistered"><code data-language="cobol">IDENTIFICATION DIVISION.
 PROGRAM-ID. HELLOWRD.
 
@@ -67,7 +94,6 @@ PROCEDURE DIVISION.
 DISPLAY &quot;HELLO WORLD&quot;.
 STOP RUN.
 </code></pre>
-<p class="prose">Cobol’s definition wasn’t added to this highlight.js instance, so this block is printed as-is.</p>
 <h2 class="title" id="user-provided-plugins">User-provided plugins</h2>
 <h3 id="block-attrs">Block <code>attrs</code></h3>
 <blockquote class="abe" id="Gettysburg">
@@ -82,11 +108,18 @@ STOP RUN.
     <nav>
       <h3>Navigation</h3>
       <ul class="pageToC">
-<li><a href="#code-blocks">Code Blocks</a>
+<li><a href="#defaults">Defaults</a></li>
+<li><a href="#%E2%80%9Cfenced%E2%80%9D-code-blocks">“Fenced” Code Blocks</a>
 <ul>
-<li><a href="#some-typescript">Some Typescript</a></li>
-<li><a href="#custom-syntax">Custom syntax</a></li>
-<li><a href="#unknown-languages">Unknown languages</a></li>
+<li><a href="#a-highlight.js-built-in-language">A highlight.js built-in language</a></li>
+<li><a href="#user-provided-custom-syntax">User-provided custom syntax</a></li>
+<li><a href="#another-custom-syntax">Another custom syntax</a></li>
+<li><a href="#unknown-languages">Unknown languages</a>
+<ul>
+<li><a href="#built-into-arcdown">Built into <code>arcdown</code></a></li>
+<li><a href="#completely-unknown">Completely unknown</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#user-provided-plugins">User-provided plugins</a>

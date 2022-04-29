@@ -118,60 +118,6 @@ test('renderer plugin overrides', async (t) => {
   t.end()
 })
 
-test('renderer hljs options', async (t) => {
-  const HLJS_CLASS = 'hljs'
-  const file = /* md */`
-## Code things
-
-\`\`\`arc
-@app
-hello-world
-\`\`\`
-
-\`\`\`javascript
-// JavaScript
-\`\`\`
-
-\`\`\`html
-<!-- HTML things -->
-\`\`\`
-
-\`\`\`typescript
-// TypeScript
-\`\`\`
-
-\`\`\`perl
-# perl things
-\`\`\`
-
-\`\`\`python
-# python things
-\`\`\`
-`.trim()
-  const options = {
-    hljs: {
-      classString: HLJS_CLASS,
-      languages: [
-        'typescript',
-        { python: false },
-        // TODO: test a custom syntax
-      ],
-    },
-  }
-
-  const { html } = await render(file, options)
-
-  t.ok(html.indexOf(`<pre class="${HLJS_CLASS}`) >= 0, 'highlight.js is working')
-  t.ok(html.indexOf('<pre class="hljs"><code data-language="javascript">') >= 0, 'js syntax is registered by default')
-  t.ok(html.indexOf('<pre class="hljs"><code data-language="html">') >= 0, 'html is registered via xml')
-  t.ok(html.indexOf('<pre class="hljs"><code data-language="arc">') >= 0, 'arc syntax is added and registered')
-  t.ok(html.indexOf('<pre class="hljs hljs-unregistered"><code data-language="perl">') >= 0, 'hljjs-builtin syntax unregistered')
-  t.ok(html.indexOf('<pre class="hljs"><code data-language="typescript">') >= 0, 'hljs-builtin added syntax is registered')
-  t.ok(html.indexOf('<pre class="hljs hljs-unregistered"><code data-language="python">') >= 0, 'default syntax can be un-registered')
-
-  t.end()
-})
-
 test('renderer custom slug', async (t) => {
   const TITLE = 'Test Doc'
   const CUSTOM_SLUG = 'custom-slug'

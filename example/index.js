@@ -1,8 +1,10 @@
 import { URL } from 'url'
 import { readFileSync, writeFileSync } from 'fs'
+import razorSyntax from 'highlightjs-cshtml-razor'
+import leanSyntax from 'highlightjs-lean'
 import markdownItAttrs from 'markdown-it-attrs'
 import markdownItEmoji from 'markdown-it-emoji'
-import render from '../src/index.js'
+import render from 'arcdown'
 
 // read the sample markdown file
 const file = readFileSync(`${new URL('.', import.meta.url).pathname}/example.md`, 'utf8')
@@ -10,14 +12,11 @@ const file = readFileSync(`${new URL('.', import.meta.url).pathname}/example.md`
 const options = {
   hljs: {
     classString: 'hljs mb0 mb1-lg relative',
-    languages: [
-      // register hljs built-in languages with a string
-      'typescript',
-      // or a custom language as an object
-      { lean: 'highlightjs-lean' },
-      // disable a default language
-      { powershell: false },
-    ],
+    languages: {
+      // directly provide the definition function
+      lean: leanSyntax,
+      'cshtml-razor': razorSyntax,
+    },
     ignoreIllegals: false,
   },
   // set options for Markdown renderer

@@ -146,22 +146,23 @@ const options = {
 
 ### highlight.js config
 
-A custom `highlight()` method supported by [highlight.js](https://highlightjs.org/) is provided to the `markdown-it`  renderer.  
+A custom `highlight()` method supported by [highlight.js](https://highlightjs.org/) is provided to the `markdown-it`  renderer. `arcdown` will detect languages in the provided Markdown string and attempt to register just those languages in hljs.  
 `ignoreIllegals: true` is the default, but can be set by the user.
-The provided `hljs` instance has 8 registered languages out of the box. A language can be disabled and additional syntaxes can be added in 2 ways:
+
+A language syntax can be added from third party libraries. And, if needed, highlight.js built-in languages can be disabled:
 
 ```javascript
+import leanSyntax from 'highlightjs-lean'
+
 const options = {
   hljs: {
     classString: 'hljs relative mb-2',
-    languages: [
-      // register hljs built-in languages with a string
-      'typescript',
-      // external languages can be added as an object
-      { lean: 'highlightjs-lean' },
-      // disable a default language
-      { powershell: false },
-    ],
+    languages: {
+      // external languages can be added:
+      lean: leanSyntax,
+      // disable a hljs built-in language
+      powershell: false,
+    },
     ignoreIllegals: false,
   },
 }
@@ -203,5 +204,5 @@ We are not married to any single component package or even to the core rendering
 - [x] type defs -- can be expanded
 - [ ] use forked toc plugin from macdonst?
 - [x] benchmarks (try against remark)
-- [ ] look for hljs perf increases
+- [x] look for hljs perf increases
 - [ ] web component enhancements 😏
