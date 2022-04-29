@@ -42,7 +42,15 @@ lorem ipsum _dolor_ sit **amet**
 [Architect](https://arc.codes/)
 `
 
-const { html, tocHtml, slug, title, category } = await render(doc)
+const {
+  frontmatter  // attributes from frontmatter
+  html,        // the good stuff: HTML!
+  slug,        // a URL-friendly slug
+  title,       // document title from the frontmatter
+  tocHtml,     // an HTML table of contents
+} = await render(doc)
+
+
 ```
 
 See ./example/ for a kitchen sink demo.
@@ -57,24 +65,24 @@ See ./example/ for a kitchen sink demo.
 - `title` the document title, lifted from the document's frontmatter. possibly empty
 - `slug` a slug of the title. possibly empty
   - created in the same way as links in the table of contents.
-- `...` all remaining frontmatter. possibly empty
+- `frontmatter` all remaining frontmatter. possibly empty
   - passed straight from the [`tiny-frontmatter` parser](https://github.com/rjreed/tiny-frontmatter)
 
 ```javascript
 import render from 'arcdown'
 
 const {
-  html,     // the good stuff: HTML!
-  tocHtml,  // an HTML table of contents
-  slug,     // a URL-friendly slug
-  title,    // document title from the frontmatter
-  // ...       any other attributes from frontmatter
+  frontmatter  // attributes from frontmatter
+  html,        // the good stuff: HTML!
+  slug,        // a URL-friendly slug
+  title,       // document title from the frontmatter
+  tocHtml,     // an HTML table of contents
 } = await render(file, options)
 ```
 
 ## Configuration
 
-`arcdown` is set up to be used without any configuration. Out-of-the-box it uses defaults and conventions preferred by the Architect team.
+`arcdown` is set up to be used without any configuration. Out-of-the-box it uses defaults and conventions preferred by the Architect team (Architect project not required).
 
 However, the renderer is customizable and extensible.
 
