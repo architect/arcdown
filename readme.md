@@ -97,7 +97,7 @@ const options = {
 
 By default, these options are enabled:
 
-```javascripton
+```json
 {
   "html": true,
   "linkify": true,
@@ -152,10 +152,13 @@ const options = {
 
 ### highlight.js config
 
-A custom `highlight()` method supported by [highlight.js](https://highlightjs.org/) is provided to the `markdown-it`  renderer. `arcdown` will detect languages in the provided Markdown string and attempt to register just those languages in hljs.  
+A custom `highlight()` method supported by [highlight.js](https://highlightjs.org/) is provided to the `markdown-it`  renderer. `arcdown` will detect languages in the provided Markdown string and attempt to register just those languages in hljs.
+
+> ℹ️  Currently, shorthand aliases for languages are not supported. Full language names should be used with Markdown code fences. Instead of `js`, use `javascript`
+
 `ignoreIllegals: true` is the default, but can be set by the user.
 
-A language syntax can be added from third party libraries. And, if needed, highlight.js built-in languages can be disabled:
+Additionally, a language syntax can be added from third party libraries. And, if needed, highlight.js built-in languages can be disabled:
 
 ```javascript
 import leanSyntax from 'highlightjs-lean'
