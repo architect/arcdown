@@ -38,7 +38,7 @@ export default async function (
         console.info(`Unable to import "${languageName}" from hljs`)
       }
     }
-    else if (langDef.constructor.name === 'Object') {
+    else if (langDef?.constructor.name === 'Object') {
       languageName = Object.keys(langDef)[0]
 
       if (typeof langDef[languageName] === 'string') {
