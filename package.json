@@ -24,7 +24,7 @@
     "types/index.d.ts"
   ],
   "dependencies": {
-    "@architect/syntaxes": "github:architect/syntaxes#v1.2.1",
+    "@architect/syntaxes": "git+https://github.com/architect/syntaxes.git#v1.2.1",
     "highlight.js": "^11.5.1",
     "markdown-it": "^13.0.0",
     "markdown-it-external-anchor": "^1.0.0",
