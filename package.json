@@ -1,6 +1,6 @@
 {
   "name": "arcdown",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A small stack of Markdown tools configured using the Architect's team preferred conventions.",
   "author": "",
   "repository": "@architect/arcdown",
