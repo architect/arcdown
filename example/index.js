@@ -7,7 +7,8 @@ import markdownItEmoji from 'markdown-it-emoji'
 import render from 'arcdown'
 
 // read the sample markdown file
-const file = readFileSync(`${new URL('.', import.meta.url).pathname}/example.md`, 'utf8')
+const path = new URL('.', import.meta.url).pathname
+const file = readFileSync(`${path}/example.md`, 'utf8')
 
 const options = {
   hljs: {

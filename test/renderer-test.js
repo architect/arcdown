@@ -87,16 +87,17 @@ lorem ipsum dolor sit amet
   t.end()
 })
 
-test('weird strings in frontmatter', async (t) => {
+test('verbose frontmatter', async (t) => {
   const file = /* md */`
 ---
 title: "Using GitHub Actions with Architect"
-image: 'post-assets/gh-actions.png'
-category: ci-cd
-description: "GitHub Actions is a "continuous integration" and continuous delivery (CI/CD) platform."
 author: 'Simon MacDonald'
-avatar: simon.png
-published: 'April 22, 2022'
+tags:
+  - foo
+  - bar
+category: [ci, cd]
+image: post-assets/gh-actions.png
+description: 'GitHub Actions is a "continuous integration" and continuous delivery (CI/CD) platform.'
 ---
 
 ## Mmmm... YAML...
@@ -104,12 +105,11 @@ published: 'April 22, 2022'
 `.trim()
   const expected = {
     title: 'Using GitHub Actions with Architect',
-    image: 'post-assets/gh-actions.png',
-    category: 'ci-cd',
-    description: 'GitHub Actions is a "continuous integration" and continuous delivery (CI/CD) platform.',
     author: 'Simon MacDonald',
-    avatar: 'simon.png',
-    published: 'April 22, 2022',
+    image: 'post-assets/gh-actions.png',
+    tags: [ 'foo', 'bar' ],
+    category: [ 'ci', 'cd' ],
+    description: 'GitHub Actions is a "continuous integration" and continuous delivery (CI/CD) platform.',
   }
 
   const { frontmatter, slug } = await render(file)

@@ -1,3 +1,11 @@
+import MarkdownIt from 'markdown-it'
+import markdownItTocAndAnchor from 'markdown-it-toc-and-anchor'
+import markdownItExternalAnchor from 'markdown-it-external-anchor'
+import matter from 'gray-matter'
+
+import createHighlight from './lib/highlight.js'
+import markdownItClass from './vendor/markdown-it-class.cjs'
+
 // some Architect-preferred defaults
 const MARKDOWN_DEFAULTS = {
   linkify: true,
@@ -10,14 +18,6 @@ const TOC_DEFAULTS = {
   tocLastLevel: 6,
   tocClassName: 'docToc',
 }
-
-import MarkdownIt from 'markdown-it'
-import markdownItTocAndAnchor from 'markdown-it-toc-and-anchor'
-import markdownItExternalAnchor from 'markdown-it-external-anchor'
-import tinyFrontmatter from 'tiny-frontmatter'
-
-import createHighlight from './lib/highlight.js'
-import markdownItClass from './vendor/markdown-it-class.cjs'
 
 let tocHtml
 
@@ -48,13 +48,13 @@ export default async function (mdFile, rendererOptions = {}) {
     renderer: customRenderer = null, // override renderer
   } = rendererOptions
 
-  const { attributes, body } = tinyFrontmatter(mdFile)
+  const { content, data: frontmatter } = matter(mdFile)
 
   const foundLangs = new Set()
   const fenceR = /`{3}(?:(.*$))?[\s\S]*?`{3}/gm
   let match
   do {
-    match = fenceR.exec(body)
+    match = fenceR.exec(content)
     if (match) foundLangs.add(match[1])
   } while (match)
 
@@ -88,16 +88,17 @@ export default async function (mdFile, rendererOptions = {}) {
     }
   }
 
-  const html = renderer.render(body)
+  const html = renderer.render(content)
 
-  if (attributes) {
-    for (const attr in attributes) {
-      const value = attributes[attr]
-      attributes[attr] = value.replace(/^"|"$|^'|'$/g, '')
+  if (frontmatter) {
+    for (const attr in frontmatter) {
+      const value = frontmatter[attr]
+      if (typeof value === 'string')
+        frontmatter[attr] = value.replace(/^"|"$|^'|'$/g, '')
     }
   }
 
-  let { slug, title } = attributes
+  let { slug, title } = frontmatter
   if (!slug) slug = title ? slugify(title) : null
 
   return {
@@ -105,7 +106,7 @@ export default async function (mdFile, rendererOptions = {}) {
     html,
     tocHtml,
     slug,
-    frontmatter: attributes,
+    frontmatter,
   }
 }
 

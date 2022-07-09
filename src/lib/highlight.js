@@ -11,7 +11,7 @@ const escapeHtml = Markdown().utils.escapeHtml // ? instantiation performance co
 
 export default async function (
   { languages: providedLanguages = {}, classString = 'hljs', ignoreIllegals = true } = {},
-  foundLanguages = null,
+  foundLanguages,
 ) {
   const languageDefinitions = new Set()
   const allLanguages = { ...KNOWN_LANGUAGES, ...providedLanguages }
@@ -35,7 +35,7 @@ export default async function (
         definitionFn = (await import(`highlight.js/lib/languages/${langDef}`)).default
       }
       catch (error) {
-        console.info(`Unable to import "${languageName}" from hljs`)
+        console.info(`arcdown unable to import "${languageName}" from hljs`)
       }
     }
     else if (langDef?.constructor.name === 'Object') {
@@ -46,7 +46,7 @@ export default async function (
           definitionFn = (await import(langDef[languageName])).default
         }
         catch (error) {
-          console.info(`Unable to import "${languageName}" from "${langDef[languageName]}"`)
+          console.info(`arcdown unable to import "${languageName}" from "${langDef[languageName]}"`)
         }
       }
       else {
@@ -54,7 +54,7 @@ export default async function (
       }
     }
 
-    if (definitionFn)
+    if (languageName && definitionFn)
       hljs.registerLanguage(languageName, definitionFn)
   }
 

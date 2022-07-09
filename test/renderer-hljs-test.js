@@ -39,7 +39,6 @@ plain text
   }
 
   const { html } = await render(file, options)
-  console.log(html)
 
   t.ok(html.indexOf(`<pre class="${HLJS_CLASS}`) >= 0, 'highlight.js is working')
   t.ok(html.indexOf('<pre class="hljs"><code data-language="arc">') >= 0, 'arc syntax is added and registered')
