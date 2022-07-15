@@ -3,14 +3,19 @@ import Markdown from 'markdown-it'
 import arcSyntax from '@architect/syntaxes/arc-hljs-grammar.js'
 
 const KNOWN_LANGUAGES = {
-  'arc': arcSyntax,
-  'html': 'highlight.js/lib/languages/xml',
+  arc: arcSyntax,
+  html: 'highlight.js/lib/languages/xml',
 }
 
-const escapeHtml = Markdown().utils.escapeHtml // ? instantiation performance cost?
+const escapeHtml = Markdown().utils
+  .escapeHtml // ? instantiation performance cost?
 
 export default async function (
-  { languages: providedLanguages = {}, classString = 'hljs', ignoreIllegals = true } = {},
+  {
+    languages: providedLanguages = {},
+    classString = 'hljs',
+    ignoreIllegals = true,
+  } = {},
   foundLanguages,
 ) {
   const languageDefinitions = new Set()
@@ -21,8 +26,12 @@ export default async function (
       const isProvided = Object.keys(allLanguages).includes(langName)
       const excluded = isProvided && !allLanguages[langName]
 
-      if (isProvided) languageDefinitions.add({ [langName]: allLanguages[langName] })
-      else if (!excluded) languageDefinitions.add(langName)
+      if (isProvided) {
+        languageDefinitions.add({ [langName]: allLanguages[langName] })
+      }
+      else if (!excluded) {
+        languageDefinitions.add(langName)
+      }
     }
   }
 
@@ -32,7 +41,8 @@ export default async function (
     if (typeof langDef === 'string') {
       languageName = langDef
       try {
-        definitionFn = (await import(`highlight.js/lib/languages/${langDef}`)).default
+        definitionFn = (await import(`highlight.js/lib/languages/${langDef}`))
+          .default
       }
       catch (error) {
         console.info(`arcdown unable to import "${languageName}" from hljs`)
@@ -46,7 +56,11 @@ export default async function (
           definitionFn = (await import(langDef[languageName])).default
         }
         catch (error) {
-          console.info(`arcdown unable to import "${languageName}" from "${langDef[languageName]}"`)
+          console.info(
+            `arcdown unable to import "${languageName}" from "${langDef[
+              languageName
+            ]}"`,
+          )
         }
       }
       else {
@@ -54,8 +68,9 @@ export default async function (
       }
     }
 
-    if (languageName && definitionFn)
+    if (languageName && definitionFn) {
       hljs.registerLanguage(languageName, definitionFn)
+    }
   }
 
   return function (code, language) {
@@ -65,10 +80,14 @@ export default async function (
         return `<pre class="${classString}"><code data-language="${language}">${highlighted.value}</code></pre>`
       }
       catch (error) {
-        return `<pre class="${classString} hljs-failed"><code data-language="${language}">${escapeHtml(code)}</code></pre>`
+        return `<pre class="${classString} hljs-failed"><code data-language="${language}">${escapeHtml(
+          code,
+        )}</code></pre>`
       }
     }
 
-    return `<pre class="${classString} hljs-unregistered"><code data-language="${language}">${escapeHtml(code)}</code></pre>`
+    return `<pre class="${classString} hljs-unregistered"><code data-language="${language}">${escapeHtml(
+      code,
+    )}</code></pre>`
   }
 }

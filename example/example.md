@@ -90,9 +90,9 @@ post /foo
 
 #### Completely unknown
 
-Cobol's definition isn't built into hljs and wasn't added by the user, so this block is printed as-is.
+Foobar's definition isn't built into hljs and wasn't added by the user, so this block is printed as-is.
 
-```cobol
+```foobar
 IDENTIFICATION DIVISION.
 PROGRAM-ID. HELLOWRD.
 

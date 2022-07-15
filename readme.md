@@ -18,13 +18,17 @@ Included are three `markdown-it` plugins (to provide a table of contents, map CS
 
 These built-ins are configurable and the chain of plugins can be extended by the user.
 
-## Installation
+### Requirements
+
+Node.js v14+
+
+### Installation
 
 ```
 npm i arcdown
 ```
 
-## Usage
+### Usage
 
 ```javascript
 import render from 'arcdown'
@@ -55,7 +59,7 @@ const {
 
 See ./example/ for a kitchen sink demo.
 
-## Result
+### Result
 
 `arcdown` returns an object with 4 strings plus any frontmatter:
 
@@ -80,13 +84,13 @@ const {
 } = await render(file, options)
 ```
 
-## Configuration
+### Configuration
 
 `arcdown` is set up to be used without any configuration. Out-of-the-box it uses defaults and conventions preferred by the Architect team (Architect project not required).
 
 However, the renderer is customizable and extensible.
 
-### `markdown-it` config
+#### `markdown-it` config
 
 Set config for [the `markdown-it` renderer](https://github.com/markdown-it/markdown-it):
 
@@ -107,7 +111,7 @@ By default, these options are enabled:
 }
 ```
 
-### Plugin overrides
+#### Plugin overrides
 
 Three plugins are provided out-of-the-box and applied in the following order:
 
@@ -152,7 +156,7 @@ const options = {
 
 `markdown-it-external-anchor` is not specifically configured here and maintains the package defaults.
 
-### highlight.js config
+#### highlight.js config
 
 A custom `highlight()` method supported by [highlight.js](https://highlightjs.org/) is provided to the `markdown-it`  renderer. `arcdown` will detect languages in the provided Markdown string and attempt to register just those languages in hljs.
 
@@ -181,7 +185,7 @@ const options = {
 
 Default registered languages include `bash`, `javascript`, `json`, `powershell`, `python`, `ruby`, `yaml`, and `arc`.
 
-### User-provided plugins
+#### User-provided plugins
 
 ```javascript
 import markdownItAttrs from 'markdown-it-attrs'
@@ -203,7 +207,7 @@ const options = {
 }
 ```
 
-## Vendored Code and Future Development
+### Vendored Code and Future Development
 
 A couple plugins have been forked and/or vendored locally to this package. This has been done to increase performance and render speed.
 
@@ -213,7 +217,6 @@ We are not married to any single component package or even to the core rendering
 
 - [x] additional testing
 - [x] type defs -- can be expanded
-- [ ] use forked toc plugin from macdonst?
 - [x] benchmarks (try against remark)
 - [x] look for hljs perf increases
 - [ ] web component enhancements 😏

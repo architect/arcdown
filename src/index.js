@@ -51,7 +51,7 @@ export default async function (mdFile, rendererOptions = {}) {
   const { content, data: frontmatter } = matter(mdFile)
 
   const foundLangs = new Set()
-  const fenceR = /`{3}(?:(.*$))?[\s\S]*?`{3}/gm
+  const fenceR = /`{3,4}(?:(.*$))?[\s\S]*?`{3,4}/gm
   let match
   do {
     match = fenceR.exec(content)

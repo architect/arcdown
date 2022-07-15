@@ -2,37 +2,47 @@ import test from 'tape'
 import render from '../src/index.js'
 
 test('renderer hljs options', async (t) => {
-  const HLJS_CLASS = 'hljs'
-  const file = /* md */`
+  const CLASS_STRING = 'hljs my-special-class'
+  const FENCE = '```'
+  const file = /* md */ `
 ## Code things
 
-\`\`\`arc
+${FENCE}arc
 # Architect isn't in hljs but it is in arcdown
-\`\`\`
+${FENCE}
 
-\`\`\`javascript
+${FENCE}javascript
 // JavaScript things just work
-\`\`\`
+${FENCE}
 
-\`\`\`html
+${FENCE}html
 <!-- HTML things are XML things -->
-\`\`\`
+${FENCE}
 
-\`\`\`perl
+${FENCE}perl
 # perl is built into hljs but should be unregistered
-\`\`\`
+${FENCE}
 
-\`\`\`
+${FENCE}
 plain text
-\`\`\`
+${FENCE}
 
-\`\`\`cobol
-* COBOL things aren't in hljs or arcdown or provided by the user
-\`\`\`
+${FENCE}\`markdown
+
+${FENCE}javascript
+// this should render without highlighting
+${FENCE}
+
+${FENCE}\`
+
+${FENCE}foobar
+* "foobar" isn't in hljs or arcdown or provided by the user
+${FENCE}
 `.trim()
+
   const options = {
     hljs: {
-      classString: HLJS_CLASS,
+      classString: CLASS_STRING,
       languages: { perl: false },
       // TODO: test a custom syntax
     },
@@ -40,13 +50,56 @@ plain text
 
   const { html } = await render(file, options)
 
-  t.ok(html.indexOf(`<pre class="${HLJS_CLASS}`) >= 0, 'highlight.js is working')
-  t.ok(html.indexOf('<pre class="hljs"><code data-language="arc">') >= 0, 'arc syntax is added and registered')
-  t.ok(html.indexOf('<pre class="hljs"><code data-language="javascript">') >= 0, 'js syntax is hljs-builtin')
-  t.ok(html.indexOf('<pre class="hljs"><code data-language="html">') >= 0, 'html is registered via xml')
-  t.ok(html.indexOf('<pre class="hljs hljs-unregistered"><code data-language="perl">') >= 0, 'hljs-builtin syntax unregistered')
-  t.ok(html.indexOf('<pre class="hljs hljs-unregistered"><code data-language="">') >= 0, 'hljs-builtin syntax unregistered but no language specified')
-  t.ok(html.indexOf('<pre class="hljs hljs-unregistered"><code data-language="cobol">') >= 0, 'unsupported hljs lang is still rendered without error')
+  t.ok(
+    html.indexOf(`<pre class="${CLASS_STRING}`) >= 0,
+    'highlight.js is working',
+  )
+  t.ok(
+    html.indexOf(`<pre class="${CLASS_STRING}"><code data-language="arc">`) >= 0,
+    'arc syntax is added and registered',
+  )
+  t.ok(
+    html.indexOf(`<pre class="${CLASS_STRING}"><code data-language="javascript">`) >= 0,
+    'js syntax is hljs-builtin',
+  )
+  t.ok(
+    html.indexOf(`<pre class="${CLASS_STRING}"><code data-language="html">`) >= 0,
+    'html is registered via xml',
+  )
+  t.ok(
+    html.indexOf(
+      `<pre class="${CLASS_STRING} hljs-unregistered"><code data-language="perl">`,
+    ) >= 0,
+    'hljs-builtin syntax unregistered',
+  )
+  t.ok(
+    html.indexOf(
+      `<pre class="${CLASS_STRING} hljs-unregistered"><code data-language="">`,
+    ) >= 0,
+    'hljs-builtin syntax unregistered but no language specified',
+  )
+  t.ok(
+    html.indexOf(
+      `<pre class="${CLASS_STRING}"><code data-language="markdown">`,
+    ) >= 0,
+    '4-tick blocks get highlighted',
+  )
+  t.ok(
+    html.indexOf(
+      `
+${FENCE}javascript
+// this should render without highlighting
+${FENCE}
+      `.trim(),
+    ) >= 0,
+    'do not highlight 3-tick fences inside 4-tick fences',
+  )
+  t.ok(
+    html.indexOf(
+      `<pre class="${CLASS_STRING} hljs-unregistered"><code data-language="foobar">`,
+    ) >= 0,
+    'unsupported hljs lang is still rendered without error',
+  )
 
   t.end()
 })
