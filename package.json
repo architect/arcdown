@@ -35,8 +35,8 @@
     "@architect/eslint-config": "^2.0.1",
     "@definitelytyped/dtslint": "^0.0.112",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "^18.0.4",
-    "eslint": "^8.19.0",
+    "@types/node": "^18.0.6",
+    "eslint": "^8.20.0",
     "tap-arc": "^0.3.5",
     "tape": "^5.5.3",
     "typescript": "^4.7.4"
@@ -48,6 +48,7 @@
     "extends": "@architect/eslint-config"
   },
   "keywords": [
-    "markdown"
+    "markdown",
+    "ssr"
   ]
 }

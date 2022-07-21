@@ -16,7 +16,8 @@ export default async function (
     classString = 'hljs',
     ignoreIllegals = true,
   } = {},
-  foundLanguages,
+  foundLanguages = new Set(),
+  hljsPlugins = [],
 ) {
   const languageDefinitions = new Set()
   const allLanguages = { ...KNOWN_LANGUAGES, ...providedLanguages }
@@ -71,6 +72,10 @@ export default async function (
     if (languageName && definitionFn) {
       hljs.registerLanguage(languageName, definitionFn)
     }
+  }
+
+  for (const plugin of hljsPlugins) {
+    hljs.addPlugin(plugin)
   }
 
   return function (code, language) {

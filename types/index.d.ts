@@ -10,11 +10,12 @@ export interface DefaultPlugins {
 export interface RendererOptions {
   markdownIt?: object;
   hljs?: object;
+  hljsPlugins?: object[];
   pluginOverrides?: DefaultPlugins;
   plugins?: object;
   renderer?: {
-    render: (markdown: string) => string,
-    use?: any,
+    render: (markdown: string) => string;
+    use?: any;
   };
 }
 
@@ -24,7 +25,7 @@ export function slugify(s: string): string;
 
 export function createHighlight(
   options: object,
-  foundLanguages: string[] | null
+  foundLanguages: string[] | null,
 ): Promise<(code: any, language: any) => string>;
 
 export interface RenderResult {
@@ -37,5 +38,5 @@ export interface RenderResult {
 
 export default function render(
   mdFile: Buffer | string,
-  rendererOptions?: RendererOptions
+  rendererOptions?: RendererOptions,
 ): Promise<RenderResult>;

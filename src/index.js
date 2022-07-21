@@ -46,6 +46,7 @@ export default async function (mdFile, rendererOptions = {}) {
     pluginOverrides = {},            // override default plugins options
     plugins: addedPlugins = {},      // add custom plugins
     renderer: customRenderer = null, // override renderer
+    hljsPlugins = [],
   } = rendererOptions
 
   const { content, data: frontmatter } = matter(mdFile)
@@ -59,7 +60,7 @@ export default async function (mdFile, rendererOptions = {}) {
   } while (match)
 
   const renderer = customRenderer || new MarkdownIt({
-    highlight: await createHighlight(hljs, foundLangs),
+    highlight: await createHighlight(hljs, foundLangs, hljsPlugins),
     ...MARKDOWN_DEFAULTS,
     ...markdownIt,
   })

@@ -2,6 +2,7 @@ import test from 'tape'
 import render from '../src/index.js'
 
 test('renderer hljs options', async (t) => {
+  const MARCO = 'POLO'
   const CLASS_STRING = 'hljs my-special-class'
   const FENCE = '```'
   const file = /* md */ `
@@ -46,6 +47,13 @@ ${FENCE}
       languages: { perl: false },
       // TODO: test a custom syntax
     },
+    hljsPlugins: [
+      {
+        'after:highlight': (result) => {
+          result.value = result.value + MARCO
+        },
+      },
+    ]
   }
 
   const { html } = await render(file, options)
@@ -99,6 +107,10 @@ ${FENCE}
       `<pre class="${CLASS_STRING} hljs-unregistered"><code data-language="foobar">`,
     ) >= 0,
     'unsupported hljs lang is still rendered without error',
+  )
+  t.ok(
+    html.indexOf(`${MARCO}</code`) >= 0,
+    'hljs plugins are properly added'
   )
 
   t.end()
