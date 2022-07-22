@@ -1,7 +1,9 @@
+<p align="center">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/architect/assets.arc.codes/raw/main/public/architect-logo-light-500b%402x.png">
-  <img alt="Architect Logo" src="https://github.com/architect/assets.arc.codes/raw/main/public/architect-logo-500b%402x.png">
+  <img alt="Architect Logo" width="500px" src="https://github.com/architect/assets.arc.codes/raw/main/public/architect-logo-500b%402x.png">
 </picture>
+</p>
 
 <p align="center">
   <a href="https://github.com/architect/arcdown/actions?query=workflow%3A%22Node+CI%22"><img src=https://github.com/architect/arcdown/workflows/Node%20CI/badge.svg alt="GitHub CI status"></a>
@@ -18,20 +20,33 @@ Included are three `markdown-it` plugins (to provide a table of contents, map CS
 
 These built-ins are configurable and the chain of plugins can be extended by the user.
 
-## Installation
+## Usage
+
+<table>
+<tr>
+<td width="400px" valign="top">
+
+### Installation
 
 ```
 npm install arcdown
 ```
 
-<small>Requires Node.js v14+</small>
+<small>ESM only, requires Node.js v14+</small>
 
-## Usage
+Import the module's default export.
+
+Provide a string of Markdown optionally with "frontmatter" as YAML.
+
+Await the response.
+
+</td>
+<td width="600px"><br>
 
 ```javascript
 import render from 'arcdown'
 
-const doc = `
+const mdString = `
 ---
 title: Hello World
 category: Examples
@@ -41,10 +56,8 @@ category: Examples
 
 lorem ipsum _dolor_ sit **amet**
 
-### Baz
-
 [Architect](https://arc.codes/)
-`
+`.trim()
 
 const {
   frontmatter, // attributes from frontmatter
@@ -52,42 +65,98 @@ const {
   slug,        // a URL-friendly slug
   title,       // document title from the frontmatter
   tocHtml,     // an HTML table of contents
-} = await render(doc)
+} = await render(mdString)
 ```
 
-See ./example/ for a kitchen sink demo.
+</td>
+</tr>
+</table>
 
-## Result
+## Render Result
+
+`arcdown` returns an object with 4 strings plus any document "frontmatter".
 
 <table>
 <tr>
 <td width="400px" valign="top">
 
-### `RenderResult`
+### `html`
 
-`arcdown` returns an object with 4 strings plus any frontmatter:
-
-- `html` the Markdown document contents as HTML
-  - the unmodified result from `markdown-it`
-- `tocHtml` the document's table of contents as HTML (nested unordered lists)
-- `title` the document title, lifted from the document's frontmatter. possibly empty
-- `slug` a slug of the title. possibly empty
-  - created in the same way as links in the table of contents.
-- `frontmatter` all remaining frontmatter. possibly empty
+The Markdown document contents as HTML, unmodified, rendered by `markdown-it`.
 
 </td>
 <td width="600px"><br>
 
 ```javascript
-import render from 'arcdown'
+const { html } = await render(file, options)
+```
 
-const {
-  frontmatter, // attributes from frontmatter
-  html,        // the good stuff: HTML!
-  slug,        // a URL-friendly slug
-  title,       // document title from the frontmatter
-  tocHtml,     // an HTML table of contents
-} = await render(file, options)
+</td>
+</tr>
+
+<tr>
+<td width="400px" valign="top">
+
+### `tocHtml`
+
+The document's table of contents as HTML (nested unordered lists).
+
+</td>
+<td width="600px"><br>
+
+```javascript
+const { tocHtml } = await render(file, options)
+```
+
+</td>
+</tr>
+
+<tr>
+<td width="400px" valign="top">
+
+### `title`
+
+The document title, lifted from the document's frontmatter.
+
+</td>
+<td width="600px"><br>
+
+```javascript
+const { title } = await render(file, options)
+```
+
+</td>
+</tr>
+
+<tr>
+<td width="400px" valign="top">
+
+### `slug`
+
+A URL-friendly slug of the title. (possibly empty) Synonymous with links in the table of contents.
+
+</td>
+<td width="600px"><br>
+
+```javascript
+const { slug } = await render(file, options)
+```
+
+</td>
+</tr>
+
+<tr>
+<td width="400px" valign="top">
+
+### `frontmatter`
+
+All remaining frontmatter. (possibly empty)
+
+</td>
+<td width="600px"><br>
+
+```javascript
+const { frontmatter } = await render(file, options)
 ```
 
 </td>
@@ -100,15 +169,17 @@ const {
 
 However, the renderer is customizable and extensible.
 
-### Core `markdown-it` config
+See ./example/ for a kitchen sink demo.
 
 <table>
 <tr>
 <td width="400px" valign="top">
 
-Set config for [the `markdown-it` renderer](https://github.com/markdown-it/markdown-it).
+### Core `markdown-it` config
 
-By default, the "html", "linkify", "typographer" markdown-it options are enabled.
+#### `RendererOptions.markdownIt`
+
+Set config for [the `markdown-it` renderer](https://github.com/markdown-it/markdown-it).
 
 </td>
 <td width="600px"><br>
@@ -120,24 +191,52 @@ const options = {
 }
 ```
 
+By default, the "html", "linkify", "typographer" markdown-it options are enabled.
+
 </td>
 </tr>
 </table>
 
 ### Plugin overrides
 
+#### `RendererOptions.pluginOverrides`
+
 Three plugins are provided out-of-the-box and applied in a specific order.
+
+Set configuration for each plugin by adding a keyed object to `options.pluginOverrides`.  
+Disable a plugin by setting its key in `pluginOverrides` to `false`.
 
 <table>
 <tr>
 <td width="400px" valign="top">
 
+
+#### `pluginOverrides.markdownItClass`
+
 1. [`markdown-it-class`](https://github.com/HiroshiOkada/markdown-it-class) as "markdownItClass" (modified and bundled to /lib)
+
+`markdown-it-class` has no default class mapping configuration and will be skipped if a config object is not provided.
+
+#### `pluginOverrides.markdownItExternalAnchor`
+
 2. [`markdown-it-external-anchor`](https://github.com/binyamin/markdown-it-external-anchor) as "markdownItExternalAnchor"
+
+`markdown-it-external-anchor` is not specifically configured here and maintains the package defaults.
+
+#### `pluginOverrides.markdownItTocAndAnchor`
+
 3. [`markdown-it-toc-and-anchor`](https://github.com/medfreeman/markdown-it-toc-and-anchor) as "markdownItTocAndAnchor"
 
-Set configuration for each plugin by adding a keyed object to `options.pluginOverrides`.  
-Disable a plugin by setting its key in `pluginOverrides` to `false`.
+`markdown-it-toc-and-anchor` is pre-configured with:
+
+```json
+{
+  "anchorLink": false,
+  "tocFirstLevel": 2,
+  "tocLastLevel": 6,
+  "tocClassName": "docToc"
+}
+```
 
 </td>
 <td width="600px"><br>
@@ -163,63 +262,6 @@ const options = {
 </tr>
 </table>
 
-### Plugin defaults
-* combine with docs above
-
-<table>
-<tr>
-<td width="400px" valign="top">
-
-`markdown-it-toc-and-anchor` is pre-configured with:
-
-</td>
-<td width="600px"><br>
-
-```json
-{
-  "anchorLink": false,
-  "tocFirstLevel": 2,
-  "tocLastLevel": 6,
-  "tocClassName": "docToc"
-}
-```
-
-</td>
-</tr>
-</table>
-
-<table>
-<tr>
-<td width="400px" valign="top">
-
-`markdown-it-class` has no default class mapping configuration and will be skipped if a config object is not provided.
-
-</td>
-<td width="600px"><br>
-
-```json
-```
-
-</td>
-</tr>
-</table>
-
-<table>
-<tr>
-<td width="400px" valign="top">
-
-`markdown-it-external-anchor` is not specifically configured here and maintains the package defaults.
-
-</td>
-<td width="600px"><br>
-
-```json
-```
-
-</td>
-</tr>
-</table>
-
 ### User-provided plugins
 
 <table>
@@ -228,13 +270,14 @@ const options = {
 
 add external plugins
 
+break into 2 tables
+
 </td>
 <td width="600px"><br>
 
 ```javascript
 import markdownItAttrs from 'markdown-it-attrs'
 import markdownItEmoji from 'markdown-it-emoji'
-import render from 'arcdown'
 
 const options = {
   plugins: {
