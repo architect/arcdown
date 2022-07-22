@@ -22,10 +22,6 @@ These built-ins are configurable and the chain of plugins can be extended by the
 
 ## Usage
 
-<table>
-<tr>
-<td width="400px" valign="top">
-
 ### Installation
 
 ```
@@ -34,16 +30,8 @@ npm install arcdown
 
 <small>ESM only, requires Node.js v14+</small>
 
-Import the module's default export.
-
-Provide a string of Markdown optionally with "frontmatter" as YAML.
-
-Await the response.
-
-</td>
-<td width="600px"><br>
-
 ```javascript
+import { readFileSync } from 'node:fs'
 import render from 'arcdown'
 
 const mdString = `
@@ -52,7 +40,7 @@ title: Hello World
 category: Examples
 ---
 
-## Foo bar
+## Foo Bar
 
 lorem ipsum _dolor_ sit **amet**
 
@@ -66,6 +54,8 @@ const {
   title,       // document title from the frontmatter
   tocHtml,     // an HTML table of contents
 } = await render(mdString)
+
+const fromFile = await render(readFileSync('../docs/some-markdown.md', 'utf-8'))
 ```
 
 </td>
@@ -74,7 +64,7 @@ const {
 
 ## Render Result
 
-`arcdown` returns an object with 4 strings plus any document "frontmatter".
+`arcdown` returns a `RenderResult` object with 4 strings plus any document "frontmatter".
 
 <table>
 <tr>
@@ -93,7 +83,9 @@ const { html } = await render(file, options)
 
 </td>
 </tr>
+</table>
 
+<table>
 <tr>
 <td width="400px" valign="top">
 
@@ -110,7 +102,9 @@ const { tocHtml } = await render(file, options)
 
 </td>
 </tr>
+</table>
 
+<table>
 <tr>
 <td width="400px" valign="top">
 
@@ -127,7 +121,9 @@ const { title } = await render(file, options)
 
 </td>
 </tr>
+</table>
 
+<table>
 <tr>
 <td width="400px" valign="top">
 
@@ -144,7 +140,9 @@ const { slug } = await render(file, options)
 
 </td>
 </tr>
+</table>
 
+<table>
 <tr>
 <td width="400px" valign="top">
 
@@ -167,31 +165,29 @@ const { frontmatter } = await render(file, options)
 
 `arcdown` is set up to be used without any configuration. Out-of-the-box it uses defaults and conventions preferred by the Architect team (Architect project not required).
 
-However, the renderer is customizable and extensible.
+However, the renderer is customizable and extensible with a `RendererOptions` object.
 
-See ./example/ for a kitchen sink demo.
+> 🪧  See ./example/ for a kitchen sink demo.
 
 <table>
 <tr>
 <td width="400px" valign="top">
 
-### Core `markdown-it` config
+### `RendererOptions.markdownIt`
 
-#### `RendererOptions.markdownIt`
-
-Set config for [the `markdown-it` renderer](https://github.com/markdown-it/markdown-it).
+Configure the core [`markdown-it` renderer](https://github.com/markdown-it/markdown-it).  
+This config is passed directly to `new MarkdownIt()`
 
 </td>
 <td width="600px"><br>
 
 ```javascript
-const options = {
-  // set options for Markdown renderer
+await render(mdString, {
   markdownIt: { linkify: false },
-}
+})
 ```
 
-By default, the "html", "linkify", "typographer" markdown-it options are enabled.
+By default, `html`, `linkify`, and `typographer` are enabled.
 
 </td>
 </tr>
@@ -199,62 +195,97 @@ By default, the "html", "linkify", "typographer" markdown-it options are enabled
 
 ### Plugin overrides
 
-#### `RendererOptions.pluginOverrides`
-
 Three plugins are provided out-of-the-box and applied in a specific order.
 
-Set configuration for each plugin by adding a keyed object to `options.pluginOverrides`.  
-Disable a plugin by setting its key in `pluginOverrides` to `false`.
+Set configuration for each plugin by passing a keyed `RendererOptions.pluginOverrides` object.
+
+> ⛔️  Disable a plugin by setting its key in `pluginOverrides` to `false`.
 
 <table>
 <tr>
 <td width="400px" valign="top">
 
-
 #### `pluginOverrides.markdownItClass`
 
-1. [`markdown-it-class`](https://github.com/HiroshiOkada/markdown-it-class) as "markdownItClass" (modified and bundled to /lib)
+[`markdown-it-class`](https://github.com/HiroshiOkada/markdown-it-class) as "markdownItClass" (modified and bundled to /lib)
 
 `markdown-it-class` has no default class mapping configuration and will be skipped if a config object is not provided.
-
-#### `pluginOverrides.markdownItExternalAnchor`
-
-2. [`markdown-it-external-anchor`](https://github.com/binyamin/markdown-it-external-anchor) as "markdownItExternalAnchor"
-
-`markdown-it-external-anchor` is not specifically configured here and maintains the package defaults.
-
-#### `pluginOverrides.markdownItTocAndAnchor`
-
-3. [`markdown-it-toc-and-anchor`](https://github.com/medfreeman/markdown-it-toc-and-anchor) as "markdownItTocAndAnchor"
-
-`markdown-it-toc-and-anchor` is pre-configured with:
-
-```json
-{
-  "anchorLink": false,
-  "tocFirstLevel": 2,
-  "tocLastLevel": 6,
-  "tocClassName": "docToc"
-}
-```
 
 </td>
 <td width="600px"><br>
 
 ```javascript
-const options = {
+await render(mdString, {
+  pluginOverrides: {
+    markdownItClass: {
+      // an element => class map
+      h2: [ 'title' ],
+      p: [ 'prose' ],
+    }
+  },
+})
+```
+
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td width="400px" valign="top">
+
+#### `pluginOverrides.markdownItExternalAnchor`
+
+[`markdown-it-external-anchor`](https://github.com/binyamin/markdown-it-external-anchor) as "markdownItExternalAnchor"
+
+`markdown-it-external-anchor` uses that package's defaults.
+
+</td>
+<td width="600px"><br>
+
+```javascript
+await render(mdString, {
+  pluginOverrides: {
+    markdownItExternalAnchor: {
+      domain: 'arc.codes',
+      class:'external',
+    },
+  },
+})
+```
+
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td width="400px" valign="top">
+
+#### `pluginOverrides.markdownItTocAndAnchor`
+
+[`markdown-it-toc-and-anchor`](https://github.com/medfreeman/markdown-it-toc-and-anchor) as "markdownItTocAndAnchor"
+
+</td>
+<td width="600px"><br>
+
+```javascript
+await render(mdString, {
   pluginOverrides: {
     // set options for toc plugin
     markdownItTocAndAnchor: { tocClassName: 'pageToC' },
-    // set options for markdown-it-class plugin
-    markdownItClass: {
-      // in this case, that's an element => class map
-      h2: [ 'title' ],
-      p: [ 'prose' ],
-    },
-    // disable markdown-it-external-anchor plugin
-    markdownItExternalAnchor: false,
-  }
+  },
+})
+```
+
+`markdown-it-toc-and-anchor` is pre-configured with:
+
+```javascript
+{
+  anchorLink: false,
+  tocFirstLevel: 2,
+  tocLastLevel: 6,
+  tocClassName: 'docToc',
 }
 ```
 
@@ -299,21 +330,17 @@ const options = {
 </table>
 
 
-## highlight.js config
+## Highlight.js (hljs) config
 
-A custom `highlight()` method backed by [highlight.js](https://highlightjs.org/) is provided to the `markdown-it` renderer. `arcdown` will detect languages in the provided Markdown string and attempt to register _just_ those languages in hljs.
+A custom `highlight()` method backed by [Highlight.js](https://highlightjs.org/) is provided to the `markdown-it` renderer. `arcdown` will detect languages in the provided Markdown string and attempt to register _just_ those languages in hljs.
 
-> ℹ️  Currently, shorthand aliases for languages are not supported. Full language names should be used with Markdown code fences. Instead of `js`, use `javascript`
-
-`ignoreIllegals: true` is the default, but can be set by the user.
-
-### 
+> ⚠️  Currently, shorthand aliases for languages are not supported. Full language names should be used with Markdown code fences. Instead of `js`, use `javascript`
 
 <table>
 <tr>
 <td width="400px" valign="top">
 
-Additionally, a language syntax can be added from third party libraries. And, if needed, highlight.js built-in languages can be disabled:
+Additionally, a language syntax can be added from third party libraries. And, if needed, Highlight.js built-in languages can be disabled:
 
 </td>
 <td width="600px"><br>
@@ -334,6 +361,8 @@ const options = {
   },
 }
 ```
+
+`ignoreIllegals: true` is the default, but can be set by the user.
 
 </td>
 </tr>
