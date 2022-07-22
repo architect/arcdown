@@ -10,7 +10,7 @@
 
 > A small stack of Markdown tools (built on `markdown-it`) configured using the Architect's team preferred conventions for creating documentation and articles rendered and served from an AWS Lambda.
 
-## [Architect](https://arc.codes)'s Markdown Renderer
+## `arcdown`: [Architect](https://arc.codes)'s Markdown Renderer
 
 This is an opinionated toolchain to create technical content from Markdown source files as quickly as possible to enable on-the-fly rendering in a Lambda runtime.
 
@@ -18,17 +18,15 @@ Included are three `markdown-it` plugins (to provide a table of contents, map CS
 
 These built-ins are configurable and the chain of plugins can be extended by the user.
 
-### Requirements
-
-Node.js v14+
-
-### Installation
+## Installation
 
 ```
-npm i arcdown
+npm install arcdown
 ```
 
-### Usage
+<small>Requires Node.js v14+</small>
+
+## Usage
 
 ```javascript
 import render from 'arcdown'
@@ -59,7 +57,13 @@ const {
 
 See ./example/ for a kitchen sink demo.
 
-### Result
+## Result
+
+<table>
+<tr>
+<td width="400px" valign="top">
+
+### `RenderResult`
 
 `arcdown` returns an object with 4 strings plus any frontmatter:
 
@@ -70,7 +74,9 @@ See ./example/ for a kitchen sink demo.
 - `slug` a slug of the title. possibly empty
   - created in the same way as links in the table of contents.
 - `frontmatter` all remaining frontmatter. possibly empty
-  - passed straight from the [`tiny-frontmatter` parser](https://github.com/rjreed/tiny-frontmatter)
+
+</td>
+<td width="600px"><br>
 
 ```javascript
 import render from 'arcdown'
@@ -84,15 +90,28 @@ const {
 } = await render(file, options)
 ```
 
-### Configuration
+</td>
+</tr>
+</table>
+
+## Configuration
 
 `arcdown` is set up to be used without any configuration. Out-of-the-box it uses defaults and conventions preferred by the Architect team (Architect project not required).
 
 However, the renderer is customizable and extensible.
 
-#### `markdown-it` config
+### Core `markdown-it` config
 
-Set config for [the `markdown-it` renderer](https://github.com/markdown-it/markdown-it):
+<table>
+<tr>
+<td width="400px" valign="top">
+
+Set config for [the `markdown-it` renderer](https://github.com/markdown-it/markdown-it).
+
+By default, the "html", "linkify", "typographer" markdown-it options are enabled.
+
+</td>
+<td width="600px"><br>
 
 ```javascript
 const options = {
@@ -101,19 +120,17 @@ const options = {
 }
 ```
 
-By default, these options are enabled:
+</td>
+</tr>
+</table>
 
-```json
-{
-  "html": true,
-  "linkify": true,
-  "typographer": true
-}
-```
+### Plugin overrides
 
-#### Plugin overrides
+Three plugins are provided out-of-the-box and applied in a specific order.
 
-Three plugins are provided out-of-the-box and applied in the following order:
+<table>
+<tr>
+<td width="400px" valign="top">
 
 1. [`markdown-it-class`](https://github.com/HiroshiOkada/markdown-it-class) as "markdownItClass" (modified and bundled to /lib)
 2. [`markdown-it-external-anchor`](https://github.com/binyamin/markdown-it-external-anchor) as "markdownItExternalAnchor"
@@ -121,6 +138,9 @@ Three plugins are provided out-of-the-box and applied in the following order:
 
 Set configuration for each plugin by adding a keyed object to `options.pluginOverrides`.  
 Disable a plugin by setting its key in `pluginOverrides` to `false`.
+
+</td>
+<td width="600px"><br>
 
 ```javascript
 const options = {
@@ -139,9 +159,21 @@ const options = {
 }
 ```
 
-#### Plugin defaults
+</td>
+</tr>
+</table>
+
+### Plugin defaults
+* combine with docs above
+
+<table>
+<tr>
+<td width="400px" valign="top">
 
 `markdown-it-toc-and-anchor` is pre-configured with:
+
+</td>
+<td width="600px"><br>
 
 ```json
 {
@@ -152,40 +184,52 @@ const options = {
 }
 ```
 
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td width="400px" valign="top">
+
 `markdown-it-class` has no default class mapping configuration and will be skipped if a config object is not provided.
+
+</td>
+<td width="600px"><br>
+
+```json
+```
+
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td width="400px" valign="top">
 
 `markdown-it-external-anchor` is not specifically configured here and maintains the package defaults.
 
-#### highlight.js config
+</td>
+<td width="600px"><br>
 
-A custom `highlight()` method supported by [highlight.js](https://highlightjs.org/) is provided to the `markdown-it`  renderer. `arcdown` will detect languages in the provided Markdown string and attempt to register just those languages in hljs.
-
-> ℹ️  Currently, shorthand aliases for languages are not supported. Full language names should be used with Markdown code fences. Instead of `js`, use `javascript`
-
-`ignoreIllegals: true` is the default, but can be set by the user.
-
-Additionally, a language syntax can be added from third party libraries. And, if needed, highlight.js built-in languages can be disabled:
-
-```javascript
-import leanSyntax from 'highlightjs-lean'
-
-const options = {
-  hljs: {
-    classString: 'hljs relative mb-2',
-    languages: {
-      // external languages can be added:
-      lean: leanSyntax,
-      // disable a hljs built-in language
-      powershell: false,
-    },
-    ignoreIllegals: false,
-  },
-}
+```json
 ```
 
-Default registered languages include `bash`, `javascript`, `json`, `powershell`, `python`, `ruby`, `yaml`, and `arc`.
+</td>
+</tr>
+</table>
 
-#### User-provided plugins
+### User-provided plugins
+
+<table>
+<tr>
+<td width="400px" valign="top">
+
+add external plugins
+
+</td>
+<td width="600px"><br>
 
 ```javascript
 import markdownItAttrs from 'markdown-it-attrs'
@@ -206,6 +250,81 @@ const options = {
   },
 }
 ```
+
+</td>
+</tr>
+</table>
+
+
+## highlight.js config
+
+A custom `highlight()` method backed by [highlight.js](https://highlightjs.org/) is provided to the `markdown-it` renderer. `arcdown` will detect languages in the provided Markdown string and attempt to register _just_ those languages in hljs.
+
+> ℹ️  Currently, shorthand aliases for languages are not supported. Full language names should be used with Markdown code fences. Instead of `js`, use `javascript`
+
+`ignoreIllegals: true` is the default, but can be set by the user.
+
+### 
+
+<table>
+<tr>
+<td width="400px" valign="top">
+
+Additionally, a language syntax can be added from third party libraries. And, if needed, highlight.js built-in languages can be disabled:
+
+</td>
+<td width="600px"><br>
+
+```javascript
+import leanSyntax from 'highlightjs-lean'
+
+const options = {
+  hljs: {
+    classString: 'hljs relative mb-2',
+    languages: {
+      // external languages can be added:
+      lean: leanSyntax,
+      // disable a hljs built-in language
+      powershell: false,
+    },
+    ignoreIllegals: false,
+  },
+}
+```
+
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td width="400px" valign="top">
+
+add hljs plugin
+
+</td>
+<td width="600px"><br>
+
+```javascript
+import leanSyntax from 'highlightjs-lean'
+
+const options = {
+  hljs: {
+    plugins: [{
+      'after:highlight'(result) {
+        result.value = result.value
+          .split('\n')
+          .reverse()
+          .join('\n')
+      }
+    }]
+  },
+}
+```
+
+</td>
+</tr>
+</table>
 
 ### Vendored Code and Future Development
 
