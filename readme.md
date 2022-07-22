@@ -78,7 +78,15 @@ The Markdown document contents as HTML, unmodified, rendered by `markdown-it`.
 <td width="600px"><br>
 
 ```javascript
-const { html } = await render(file, options)
+const { html } = await render(mdString)
+
+const document = `
+<html>
+<body>
+  <main>${html}</main>
+</body>
+</html>
+`
 ```
 
 </td>
@@ -97,7 +105,16 @@ The document's table of contents as HTML (nested unordered lists).
 <td width="600px"><br>
 
 ```javascript
-const { tocHtml } = await render(file, options)
+const { tocHtml, html } = await render(mdString)
+
+const document = `
+<html>
+<body>
+  <article>${html}</article>
+  <aside>${tocHtml}</aside>
+</body>
+</html>
+`
 ```
 
 </td>
@@ -116,7 +133,9 @@ The document title, lifted from the document's frontmatter.
 <td width="600px"><br>
 
 ```javascript
-const { title } = await render(file, options)
+const { title } = await render(mdString)
+
+console.log(`Rendered "${title}"`)
 ```
 
 </td>
@@ -135,7 +154,9 @@ A URL-friendly slug of the title. (possibly empty) Synonymous with links in the 
 <td width="600px"><br>
 
 ```javascript
-const { slug } = await render(file, options)
+const { slug } = await render(mdString)
+
+const docLink = `http://my-site.com/docs/${slug}`
 ```
 
 </td>
@@ -155,6 +176,8 @@ All remaining frontmatter. (possibly empty)
 
 ```javascript
 const { frontmatter } = await render(file, options)
+
+const sortedTags = frontmatter.tags.sort()
 ```
 
 </td>
@@ -205,11 +228,11 @@ Set configuration for each plugin by passing a keyed `RendererOptions.pluginOver
 <tr>
 <td width="400px" valign="top">
 
-#### `pluginOverrides.markdownItClass`
+#### `markdownItClass`
 
-[`markdown-it-class`](https://github.com/HiroshiOkada/markdown-it-class) as "markdownItClass" (modified and bundled to /lib)
+[`markdown-it-class` configuration ](https://github.com/HiroshiOkada/markdown-it-class)
 
-`markdown-it-class` has no default class mapping configuration and will be skipped if a config object is not provided.
+This plugin is disabled unless configuration is provided.
 
 </td>
 <td width="600px"><br>
@@ -226,6 +249,8 @@ await render(mdString, {
 })
 ```
 
+For performance reasons, this plugin was modified and bundled to `./src/vendor/`
+
 </td>
 </tr>
 </table>
@@ -234,11 +259,11 @@ await render(mdString, {
 <tr>
 <td width="400px" valign="top">
 
-#### `pluginOverrides.markdownItExternalAnchor`
+#### `markdownItExternalAnchor`
 
-[`markdown-it-external-anchor`](https://github.com/binyamin/markdown-it-external-anchor) as "markdownItExternalAnchor"
+[`markdown-it-external-anchor` configuration](https://github.com/binyamin/markdown-it-external-anchor)
 
-`markdown-it-external-anchor` uses that package's defaults.
+`markdown-it-external-anchor` defaults are used in `arcdown`.
 
 </td>
 <td width="600px"><br>
@@ -262,7 +287,7 @@ await render(mdString, {
 <tr>
 <td width="400px" valign="top">
 
-#### `pluginOverrides.markdownItTocAndAnchor`
+#### `markdownItTocAndAnchor`
 
 [`markdown-it-toc-and-anchor`](https://github.com/medfreeman/markdown-it-toc-and-anchor) as "markdownItTocAndAnchor"
 
@@ -272,8 +297,9 @@ await render(mdString, {
 ```javascript
 await render(mdString, {
   pluginOverrides: {
-    // set options for toc plugin
-    markdownItTocAndAnchor: { tocClassName: 'pageToC' },
+    markdownItTocAndAnchor: {
+      tocClassName: 'pageToC',
+    },
   },
 })
 ```
@@ -294,6 +320,8 @@ await render(mdString, {
 </table>
 
 ### User-provided plugins
+
+It is possible to pass additional `markdown-it` plugins to `arcdown`'s renderer. Provided plugins will be applied after the default plugins provided by `arcdown`. 
 
 <table>
 <tr>
