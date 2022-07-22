@@ -171,6 +171,8 @@ const docLink = `http://my-site.com/docs/${slug}`
 
 All remaining frontmatter. (possibly empty)
 
+The document's frontmatter is parsed by [`gray-matter`](https://github.com/jonschlinkert/gray-matter) and directly returned here.
+
 </td>
 <td width="600px"><br>
 
@@ -192,11 +194,13 @@ However, the renderer is customizable and extensible with a `RendererOptions` ob
 
 > 🪧  See ./example/ for a kitchen sink demo.
 
+### `markdown-it` Config
+
 <table>
 <tr>
 <td width="400px" valign="top">
 
-### `RendererOptions.markdownIt`
+#### `markdownIt`
 
 Configure the core [`markdown-it` renderer](https://github.com/markdown-it/markdown-it).  
 This config is passed directly to `new MarkdownIt()`
@@ -230,9 +234,11 @@ Set configuration for each plugin by passing a keyed `RendererOptions.pluginOver
 
 #### `markdownItClass`
 
-[`markdown-it-class` configuration ](https://github.com/HiroshiOkada/markdown-it-class)
+Apply class names to each generated element based on its tag name. Provide a map of element names to an array of classes to be applied.
 
 This plugin is disabled unless configuration is provided.
+
+[`markdown-it-class` configuration ](https://github.com/HiroshiOkada/markdown-it-class)
 
 </td>
 <td width="600px"><br>
@@ -261,9 +267,11 @@ For performance reasons, this plugin was modified and bundled to `./src/vendor/`
 
 #### `markdownItExternalAnchor`
 
-[`markdown-it-external-anchor` configuration](https://github.com/binyamin/markdown-it-external-anchor)
+Mark all external links (links starting with "http[s]://") with `target=_blank` and an optional class.
 
-`markdown-it-external-anchor` defaults are used in `arcdown`.
+Plugin defaults are used in `arcdown`.
+
+[`markdown-it-external-anchor` configuration](https://github.com/binyamin/markdown-it-external-anchor)
 
 </td>
 <td width="600px"><br>
@@ -289,7 +297,9 @@ await render(mdString, {
 
 #### `markdownItTocAndAnchor`
 
-[`markdown-it-toc-and-anchor`](https://github.com/medfreeman/markdown-it-toc-and-anchor) as "markdownItTocAndAnchor"
+Modify all document headings with anchor tags and generate an HTML table of contents utilizing those heading anchors.
+
+[`markdown-it-toc-and-anchor` configuration](https://github.com/medfreeman/markdown-it-toc-and-anchor)
 
 </td>
 <td width="600px"><br>
@@ -321,7 +331,8 @@ await render(mdString, {
 
 ### User-provided plugins
 
-It is possible to pass additional `markdown-it` plugins to `arcdown`'s renderer. Provided plugins will be applied after the default plugins provided by `arcdown`. 
+It is possible to pass additional `markdown-it` plugins to `arcdown`'s renderer by populating `RendererOptions.plugins`.  
+Provided plugins will be applied after the default plugins bundled with `arcdown`.
 
 <table>
 <tr>
@@ -336,21 +347,25 @@ break into 2 tables
 
 ```javascript
 import markdownItAttrs from 'markdown-it-attrs'
+
+await render(mdString, {
+  plugins: { markdownItAttrs },
+})
+```
+
+```javascript
 import markdownItEmoji from 'markdown-it-emoji'
 
-const options = {
-  plugins: {
-    // add bare custom plugins
-    markdownItAttrs,
-    // verbose definition
+await render(mdString, {
+  plugins: { 
     mdMoji: [ // key name doesn't matter
       // the plugin function:
       markdownItEmoji,
       // with options:
       { shortcuts: { laughing: ':D' } },
     ],
-  },
-}
+   },
+})
 ```
 
 </td>

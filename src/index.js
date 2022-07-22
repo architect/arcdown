@@ -41,12 +41,11 @@ function slugify (s) {
 
 export default async function (mdFile, rendererOptions = {}) {
   const {
-    hljs = {},                       // highlight.js languages and classes
+    hljs = {},                       // highlight.js languages, classes, and plugins
     markdownIt = {},                 // override markdown-it options
     pluginOverrides = {},            // override default plugins options
     plugins: addedPlugins = {},      // add custom plugins
     renderer: customRenderer = null, // override renderer
-    hljsPlugins = [],
   } = rendererOptions
 
   const { content, data: frontmatter } = matter(mdFile)
@@ -60,7 +59,7 @@ export default async function (mdFile, rendererOptions = {}) {
   } while (match)
 
   const renderer = customRenderer || new MarkdownIt({
-    highlight: await createHighlight(hljs, foundLangs, hljsPlugins),
+    highlight: await createHighlight(hljs, foundLangs, hljs.plugins),
     ...MARKDOWN_DEFAULTS,
     ...markdownIt,
   })
