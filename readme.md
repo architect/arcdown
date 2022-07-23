@@ -1,7 +1,7 @@
 <p align="center">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/architect/assets.arc.codes/raw/main/public/architect-logo-light-500b%402x.png">
-  <img alt="Architect Logo" width="50%" src="https://github.com/architect/assets.arc.codes/raw/main/public/architect-logo-500b%402x.png">
+  <img alt="Architect Logo" width="500px" src="https://github.com/architect/assets.arc.codes/raw/main/public/architect-logo-500b%402x.png">
 </picture>
 </p>
 
@@ -16,7 +16,7 @@
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ## Contents
 
@@ -37,7 +37,7 @@
     1. [Todo](#todo)
 
 </td>
-<td width="60%" valign="top">
+<td width="600px" valign="top">
 
 ## What is this?
 
@@ -107,14 +107,14 @@ const fromFile = await render(readFileSync('../docs/some-markdown.md', 'utf-8'))
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `html: string`
 
 The Markdown document contents as HTML, unmodified, rendered by `markdown-it`.
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 const { html } = await render(mdString)
@@ -134,14 +134,14 @@ const document = `
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `tocHtml: string`
 
 The document's table of contents as HTML (nested unordered lists).
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 const { tocHtml, html } = await render(mdString)
@@ -162,14 +162,14 @@ const document = `
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `title: string`
 
 The document title, lifted from the document's frontmatter.
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 const { title } = await render(mdString)
@@ -183,14 +183,14 @@ console.log(`Rendered "${title}"`)
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `slug: string`
 
 A URL-friendly slug of the title. (possibly empty) Synonymous with links in the table of contents.
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 const { slug } = await render(mdString)
@@ -204,7 +204,7 @@ const docLink = `http://my-site.com/docs/${slug}`
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `frontmatter: object`
 
@@ -213,7 +213,7 @@ All remaining frontmatter. (possibly empty)
 The document's frontmatter is parsed by [`gray-matter`](https://github.com/jonschlinkert/gray-matter) and directly returned here.
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 const { frontmatter } = await render(file, options)
@@ -237,7 +237,7 @@ However, the renderer is customizable and extensible with a `RendererOptions` ob
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `markdownIt`
 
@@ -245,7 +245,7 @@ Configure the core [`markdown-it` renderer](https://github.com/markdown-it/markd
 This config is passed directly to `new MarkdownIt()`
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 await render(mdString, {
@@ -269,7 +269,7 @@ Set configuration for each plugin by passing a keyed `RendererOptions.pluginOver
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `markdownItClass`
 
@@ -281,7 +281,7 @@ This plugin is disabled unless configuration is provided.
 [`markdown-it-class` docs ](https://github.com/HiroshiOkada/markdown-it-class)
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 await render(mdString, {
@@ -303,7 +303,7 @@ For performance reasons, this plugin was modified and bundled to `./src/vendor/`
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `markdownItExternalAnchor`
 
@@ -314,7 +314,7 @@ Plugin defaults are used in `arcdown`.
 [`markdown-it-external-anchor` docs](https://github.com/binyamin/markdown-it-external-anchor)
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 await render(mdString, {
@@ -333,7 +333,7 @@ await render(mdString, {
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `markdownItTocAndAnchor`
 
@@ -342,7 +342,7 @@ Modify all document headings with anchor tags and generate an HTML table of cont
 [`markdown-it-toc-and-anchor` docs](https://github.com/medfreeman/markdown-it-toc-and-anchor)
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 await render(mdString, {
@@ -376,14 +376,14 @@ Plugins can be provided in two ways and will be applied after the default plugin
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `plugins`
 
 The simplest method for extending `markdown-it` is to import a plugin function and provide it directly.
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 import markdownItAttrs from 'markdown-it-attrs'
@@ -399,7 +399,7 @@ await render(mdString, {
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `plugins` with options
 
@@ -408,7 +408,7 @@ If a plugin requires options, provide the `markdown-it` plugin as a tuple where 
 Here the key name provided does not matter.
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 import markdownItEmoji from 'markdown-it-emoji'
@@ -438,14 +438,14 @@ Set Highlight.js configuration by passing a keyed `RendererOptions.hljs` object.
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `classString: string`
 
 A string that will be added to each `<pre class="">` wrapper tag for highlighted code blocks.
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 await render(mdString, {
@@ -461,7 +461,7 @@ await render(mdString, {
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `ignoreIllegals: boolean`
 
@@ -470,7 +470,7 @@ Passed directly to `hljs.highlight()`. [The docs](https://highlightjs.readthedoc
 > when true forces highlighting to finish even in case of detecting illegal syntax for the language[...]
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 await render(mdString, {
@@ -488,7 +488,7 @@ await render(mdString, {
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `languages: object`
 
@@ -496,7 +496,7 @@ Additional language syntaxes can be added from third party libraries.
 If needed, Highlight.js built-in languages can be disabled by setting their key to `false`.
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 import leanSyntax from 'highlightjs-lean'
@@ -517,7 +517,7 @@ await render(mdString, {
 
 <table>
 <tr>
-<td width="40%" valign="top">
+<td width="400px" valign="top">
 
 ### `plugins: object[]`
 
@@ -526,7 +526,7 @@ Highlight.js plugins can be passed to `arcdown`'s highlighter as an array of obj
 See [the hljs plugin docs](https://highlightjs.readthedocs.io/en/latest/plugin-api.html) for more info.
 
 </td>
-<td width="60%"><br>
+<td width="600px"><br>
 
 ```javascript
 class CodeFlipper {
