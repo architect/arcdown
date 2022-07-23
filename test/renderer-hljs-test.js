@@ -45,15 +45,15 @@ ${FENCE}
     hljs: {
       classString: CLASS_STRING,
       languages: { perl: false },
+      plugins: [
+        {
+          'after:highlight': (result) => {
+            result.value = result.value + MARCO
+          },
+        },
+      ]
       // TODO: test a custom syntax
     },
-    hljsPlugins: [
-      {
-        'after:highlight': (result) => {
-          result.value = result.value + MARCO
-        },
-      },
-    ]
   }
 
   const { html } = await render(file, options)
