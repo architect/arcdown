@@ -7,10 +7,16 @@ export interface DefaultPlugins {
   markdownItTocAndAnchor?: object | boolean;
 }
 
+export interface HljsOptions {
+  classString?: string;
+  ignoreIllegals?: boolean;
+  languages?: object;
+  plugins?: object[];
+}
+
 export interface RendererOptions {
   markdownIt?: object;
-  hljs?: object;
-  hljsPlugins?: object[];
+  hljs?: HljsOptions;
   pluginOverrides?: DefaultPlugins;
   plugins?: object;
   renderer?: {
