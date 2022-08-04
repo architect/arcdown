@@ -1,15 +1,19 @@
 {
   "compilerOptions": {
     "module": "ES2020",
-    "lib": ["ES6"],
-    "moduleResolution": "node",
+    "lib": [
+      "ES6"
+    ],
+    "moduleResolution": "Node",
     "types": [],
     "strict": true,
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "arcdown": ["."]
+      "arcdown": [
+        "."
+      ]
     }
   }
 }
