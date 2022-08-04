@@ -11,8 +11,7 @@
   "type": "module",
   "scripts": {
     "dtslint": "dtslint types",
-    "lint": "rome format --indent-style space --quote-style single --write .",
-    "format": "rome format --write .",
+    "format": "rome format --indent-style space --quote-style single --line-width 100 --write .",
     "tape": "tape test/* | tap-arc",
     "test": "npm run format && npm run dtslint && npm run tape"
   },
@@ -31,7 +30,6 @@
     "markdown-it": "^13.0.1",
     "markdown-it-anchor": "^8.6.4",
     "markdown-it-external-anchor": "^1.0.0",
-    "markdown-it-toc-and-anchor": "^4.2.0",
     "markdown-it-toc-done-right": "^4.2.0"
   },
   "devDependencies": {

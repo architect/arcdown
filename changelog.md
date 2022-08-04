@@ -7,9 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- `Renderer` class interface
+- `markdownItAnchor` and `markdown-it-toc-done-right` *see "Changed" below
+
+### Removed
+- `default` function as render interface
+- `markdown-it-toc-and-anchor` *see "Changed" below
+
+### Changed
+- class-based interfaces
+- new table of contents plugin
+  - `markdownItTocAndAnchor` retired
+  - use `markdown-it-anchor` as `markdownItAnchor` for heading anchor creation
+  - use `markdown-it-toc-done-right` as `markdownItToc` for table of contents
+- `arcdown` referenced as Arcdown or `Arcdown` instead
+
 ### Fixed
-- hljs plugin application in long running processes
-- handle codefence language specifiers with trailing spaces
+- hljs plugin application in subsequent render calls
+- handle codefence language specifiers with trailing spaces and meta info
+  - this correctly loads the `javascript` language for syntax highlighting:
+````
+```javascript 12:42;foo-bar 
+````
 
 ## [1.0.1] 2022-07-22
 
