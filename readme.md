@@ -61,7 +61,7 @@ All built-ins are configurable and extensible.
 
 ## Installation
 
-```
+```shell
 npm install arcdown
 ```
 

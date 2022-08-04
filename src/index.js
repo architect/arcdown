@@ -1,113 +1,144 @@
-import MarkdownIt from 'markdown-it'
-import markdownItTocAndAnchor from 'markdown-it-toc-and-anchor'
-import markdownItExternalAnchor from 'markdown-it-external-anchor'
-import matter from 'gray-matter'
+import MarkdownIt from "markdown-it";
+import markdownItExternalAnchor from "markdown-it-external-anchor";
+import markdownItAnchor from "markdown-it-anchor";
+import markdownItToc from "markdown-it-toc-done-right";
+import matter from "gray-matter";
 
-import createHighlight from './lib/highlight.js'
-import markdownItClass from './vendor/markdown-it-class.cjs'
+import markdownItClass from "./vendor/markdown-it-class.cjs";
 
-// some Architect-preferred defaults
-const MARKDOWN_DEFAULTS = {
-  linkify: true,
-  html: true,
-  typographer: true,
+import createHighlight from "./lib/highlight.js";
+import findLanguages from "./lib/findLanguages.js";
+import slugify from "./lib/slugify.js";
+
+// ? maybe just extend MarkdownIt class
+export class Renderer {
+	static slugify = slugify;
+	static findLanguages = findLanguages;
+
+	#tocHtml = "";
+	#defaultPlugins = {
+		markdownItClass,
+		markdownItExternalAnchor,
+		markdownItAnchor: [
+			markdownItAnchor,
+			{
+				slugify,
+				tabIndex: false,
+				callback(token, info) {
+					console.log(token.markup, info.title);
+				},
+			},
+		],
+		markdownItToc: [
+			markdownItToc,
+			{
+				slugify,
+				listType: "ul",
+				containerClass: "",
+				containerId: "",
+				listClass: "",
+				itemClass: "",
+				linkClass: "",
+				callback: (html) => {
+					this.#tocHtml = html;
+				},
+			},
+		],
+	};
+
+	/**
+   * @param {import('../types').RendererOptions} [options] - arcdown options
+   */
+	constructor(options = {}) {
+		const {
+			hljs = {},
+			markdownIt = {},
+			pluginOverrides = {},
+			plugins = {},
+			renderer = null,
+		} = options;
+
+		// don't apply classes if missing mapping
+		if (!pluginOverrides.markdownItClass) {
+			pluginOverrides.markdownItClass = false;
+		}
+
+		this.hljsOptions = hljs;
+		this.mditOptions = markdownIt;
+		this.mditPluginOverrides = pluginOverrides;
+		this.mditAddedPlugins = plugins;
+		this.customRenderer = renderer;
+
+		this.#createRenderer();
+	}
+
+	#createRenderer() {
+		// create a mdit renderer
+		const renderer =
+			this.customRenderer || new MarkdownIt({
+				linkify: true,
+				html: true,
+				typographer: true,
+				...this.mditOptions,
+			});
+
+		if (typeof renderer.use === "function") {
+			const allPlugins = { ...this.#defaultPlugins, ...this.mditAddedPlugins };
+			for (const mdPlugin in allPlugins) {
+				// skip disabled plugins
+				if (
+					(mdPlugin in this.mditPluginOverrides) && this.mditPluginOverrides[
+						mdPlugin
+					] === false
+				) {
+					continue;
+				}
+
+				const plugin = allPlugins[mdPlugin];
+				let pluginFn = plugin;
+				let pluginOptions = {};
+
+				if (Array.isArray(plugin)) {
+					[pluginFn, pluginOptions] = plugin;
+				}
+
+				renderer.use(pluginFn, {
+					...pluginOptions,
+					...this.mditPluginOverrides[mdPlugin],
+				});
+			}
+		}
+
+		this.renderer = renderer;
+	}
+
+	async render(mdContent) {
+		if (!this.renderer?.render) {
+			throw new Error("Renderer not ready");
+		}
+
+		const { content, data: frontmatter } = matter(mdContent);
+		// find langs and then create highlighter and add it to renderer
+		const foundLanguages = Renderer.findLanguages(content);
+		const highlighter = await createHighlight(this.hljsOptions, foundLanguages);
+
+		if (!this.customRenderer && typeof this.renderer.set === "function") {
+			this.renderer.set({ highlight: highlighter });
+		}
+
+		const html = this.renderer.render(content);
+
+		let { slug, title } = frontmatter;
+		if (!slug && title) {
+			slug = Renderer.slugify(title);
+		}
+
+		return {
+			title,
+			slug,
+			frontmatter,
+			html,
+			tocHtml: this.#tocHtml, // janky
+		};
+	}
 }
-const TOC_DEFAULTS = {
-  anchorLink: false,
-  tocFirstLevel: 2,
-  tocLastLevel: 6,
-  tocClassName: 'docToc',
-}
-
-let tocHtml
-
-const defaultPlugins = {
-  markdownItClass,
-  markdownItExternalAnchor,
-  markdownItTocAndAnchor: [
-    // @ts-ignore
-    markdownItTocAndAnchor.default,
-    {
-      slugify,
-      tocCallback: (_tocMarkdown, _tocArray, _tocHtml) => { tocHtml = _tocHtml },
-      ...TOC_DEFAULTS,
-    }
-  ],
-}
-
-function slugify (s) {
-  return encodeURIComponent(String(s).trim().toLowerCase().replace(/\s+/g, '-'))
-}
-
-export default async function (mdFile, rendererOptions = {}) {
-  const {
-    hljs = {},                       // highlight.js languages, classes, and plugins
-    markdownIt = {},                 // override markdown-it options
-    pluginOverrides = {},            // override default plugins options
-    plugins: addedPlugins = {},      // add custom plugins
-    renderer: customRenderer = null, // override renderer
-  } = rendererOptions
-
-  const { content, data: frontmatter } = matter(mdFile)
-
-  const foundLangs = new Set()
-  const fenceR = /`{3,4}(?:(.*$))?[\s\S]*?`{3,4}/gm
-  let match
-  do {
-    match = fenceR.exec(content)
-    if (match) foundLangs.add(match[1])
-  } while (match)
-
-  const renderer = customRenderer || new MarkdownIt({
-    highlight: await createHighlight(hljs, foundLangs, hljs.plugins),
-    ...MARKDOWN_DEFAULTS,
-    ...markdownIt,
-  })
-
-  // don't apply classes if missing mapping
-  if (!pluginOverrides.markdownItClass)
-    pluginOverrides.markdownItClass = false
-
-  if (typeof renderer.use === 'function') {
-    const allPlugins = { ...defaultPlugins, ...addedPlugins }
-    for (const mdPlugin in allPlugins) {
-    // skip disabled plugins
-      if (
-        mdPlugin in pluginOverrides
-      && pluginOverrides[mdPlugin] === false
-      ) continue
-
-      const plugin = allPlugins[mdPlugin]
-      let pluginFn = plugin
-      let pluginOptions = {}
-
-      if (Array.isArray(plugin))
-        [ pluginFn, pluginOptions ] = plugin
-
-      renderer.use(pluginFn, { ...pluginOptions, ...pluginOverrides[mdPlugin] })
-    }
-  }
-
-  const html = renderer.render(content)
-
-  if (frontmatter) {
-    for (const attr in frontmatter) {
-      const value = frontmatter[attr]
-      if (typeof value === 'string')
-        frontmatter[attr] = value.replace(/^"|"$|^'|'$/g, '')
-    }
-  }
-
-  let { slug, title } = frontmatter
-  if (!slug) slug = title ? slugify(title) : null
-
-  return {
-    title,
-    html,
-    tocHtml,
-    slug,
-    frontmatter,
-  }
-}
-
-export { createHighlight, defaultPlugins, slugify }
