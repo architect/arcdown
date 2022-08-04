@@ -1,10 +1,10 @@
 import test from 'tape'
-import render from '../src/index.js'
+import { Arcdown } from '../src/index.js'
+
+const FENCE = '```'
 
 test('renderer hljs options', async (t) => {
-  const MARCO = 'POLO'
-  const CLASS_STRING = 'hljs my-special-class'
-  const FENCE = '```'
+  const CLASS = 'hljs my-special-class'
   const file = /* md */ `
 ## Code things
 
@@ -28,14 +28,6 @@ ${FENCE}
 plain text
 ${FENCE}
 
-${FENCE}\`markdown
-
-${FENCE}javascript
-// this should render without highlighting
-${FENCE}
-
-${FENCE}\`
-
 ${FENCE}foobar
 * "foobar" isn't in hljs or arcdown or provided by the user
 ${FENCE}
@@ -43,74 +35,38 @@ ${FENCE}
 
   const options = {
     hljs: {
-      classString: CLASS_STRING,
+      classString: CLASS,
       languages: { perl: false },
-      plugins: [
-        {
-          'after:highlight': (result) => {
-            result.value = result.value + MARCO
-          },
-        },
-      ]
-      // TODO: test a custom syntax
     },
   }
 
-  const { html } = await render(file, options)
+  const renderer = new Arcdown(options)
+  const { html } = await renderer.render(file)
 
+  t.ok(html.indexOf(`<pre class="${CLASS}`) >= 0, 'highlight.js is working')
   t.ok(
-    html.indexOf(`<pre class="${CLASS_STRING}`) >= 0,
-    'highlight.js is working',
-  )
-  t.ok(
-    html.indexOf(`<pre class="${CLASS_STRING}"><code data-language="arc">`) >= 0,
+    html.indexOf(`<pre class="${CLASS}"><code data-language="arc">`) >= 0,
     'arc syntax is added and registered',
   )
   t.ok(
-    html.indexOf(`<pre class="${CLASS_STRING}"><code data-language="javascript">`) >= 0,
+    html.indexOf(`<pre class="${CLASS}"><code data-language="javascript">`) >= 0,
     'js syntax is hljs-builtin',
   )
   t.ok(
-    html.indexOf(`<pre class="${CLASS_STRING}"><code data-language="html">`) >= 0,
+    html.indexOf(`<pre class="${CLASS}"><code data-language="html">`) >= 0,
     'html is registered via xml',
   )
   t.ok(
-    html.indexOf(
-      `<pre class="${CLASS_STRING} hljs-unregistered"><code data-language="perl">`,
-    ) >= 0,
+    html.indexOf(`<pre class="${CLASS} hljs-unregistered"><code data-language="perl">`) >= 0,
     'hljs-builtin syntax unregistered',
   )
   t.ok(
-    html.indexOf(
-      `<pre class="${CLASS_STRING} hljs-unregistered"><code data-language="">`,
-    ) >= 0,
+    html.indexOf(`<pre class="${CLASS} hljs-unregistered"><code data-language="">`) >= 0,
     'hljs-builtin syntax unregistered but no language specified',
   )
   t.ok(
-    html.indexOf(
-      `<pre class="${CLASS_STRING}"><code data-language="markdown">`,
-    ) >= 0,
-    '4-tick blocks get highlighted',
-  )
-  t.ok(
-    html.indexOf(
-      `
-${FENCE}javascript
-// this should render without highlighting
-${FENCE}
-      `.trim(),
-    ) >= 0,
-    'do not highlight 3-tick fences inside 4-tick fences',
-  )
-  t.ok(
-    html.indexOf(
-      `<pre class="${CLASS_STRING} hljs-unregistered"><code data-language="foobar">`,
-    ) >= 0,
+    html.indexOf(`<pre class="${CLASS} hljs-unregistered"><code data-language="foobar">`) >= 0,
     'unsupported hljs lang is still rendered without error',
-  )
-  t.ok(
-    html.indexOf(`${MARCO}</code`) >= 0,
-    'hljs plugins are properly added'
   )
 
   t.end()

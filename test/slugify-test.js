@@ -1,5 +1,5 @@
 import test from 'tape'
-import { slugify } from '../src/index.js'
+import slugify from '../src/lib/slugify.js'
 
 test('slugify', (t) => {
   t.equal(slugify('Test-Doc'), 'test-doc', 'uppercase')

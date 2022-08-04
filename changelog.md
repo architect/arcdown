@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+- `Renderer` class interface
+- `markdownItAnchor` and `markdown-it-toc-done-right` *see "Changed" below
+
+### Removed
+- `default` function as render interface
+- `markdown-it-toc-and-anchor` *see "Changed" below
+
+### Changed
+- class-based interfaces
+- new table of contents plugin
+  - `markdownItTocAndAnchor` retired
+  - use `markdown-it-anchor` as `markdownItAnchor` for heading anchor creation
+  - use `markdown-it-toc-done-right` as `markdownItToc` for table of contents
+- `arcdown` referenced as Arcdown or `Arcdown` instead
+
+### Fixed
+- hljs plugin application in subsequent render calls
+- handle codefence language specifiers with trailing spaces and meta info
+  - this correctly loads the `javascript` language for syntax highlighting:
+````
+```javascript 12:42;foo-bar 
+````
+
 ## [1.0.1] 2022-07-22
 
 ### Changed

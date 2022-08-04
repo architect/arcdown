@@ -28,14 +28,15 @@
     "gray-matter": "^4.0.3",
     "highlight.js": "^11.6.0",
     "markdown-it": "^13.0.1",
+    "markdown-it-anchor": "^8.6.4",
     "markdown-it-external-anchor": "^1.0.0",
-    "markdown-it-toc-and-anchor": "^4.2.0"
+    "markdown-it-toc-done-right": "^4.2.0"
   },
   "devDependencies": {
     "@architect/eslint-config": "^2.0.1",
     "@definitelytyped/dtslint": "^0.0.112",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "^18.0.6",
+    "@types/node": "^18.6.3",
     "eslint": "^8.20.0",
     "tap-arc": "^0.3.5",
     "tape": "^5.5.3",
@@ -43,9 +44,13 @@
   },
   "eslintConfig": {
     "parserOptions": {
+      "ecmaVersion": 13,
       "sourceType": "module"
     },
-    "extends": "@architect/eslint-config"
+    "extends": "@architect/eslint-config",
+    "rules": {
+      "fp/no-class": "off"
+    }
   },
   "keywords": [
     "markdown",

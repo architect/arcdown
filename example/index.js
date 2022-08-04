@@ -4,7 +4,7 @@ import razorSyntax from 'highlightjs-cshtml-razor'
 import leanSyntax from 'highlightjs-lean'
 import markdownItAttrs from 'markdown-it-attrs'
 import markdownItEmoji from 'markdown-it-emoji'
-import render from 'arcdown'
+import { Arcdown } from 'arcdown'
 
 // read the sample markdown file
 const path = new URL('.', import.meta.url).pathname
@@ -25,7 +25,7 @@ const options = {
   // override default plugins default options
   pluginOverrides: {
     // set options for toc plugin
-    markdownItTocAndAnchor: { tocClassName: 'pageToC' },
+    markdownItToc: { containerClass: 'pageToC' },
     // set options for markdown-it-class plugin
     markdownItClass: {
       // in this case, that's an element => class map
@@ -44,7 +44,7 @@ const options = {
       markdownItEmoji,
       // with options:
       {
-        shortcuts: { laughing: ':D' }
+        shortcuts: { laughing: ':D' },
       },
     ],
   },
@@ -53,15 +53,12 @@ const options = {
 // create an async function
 async function main () {
   // render markdown to html
-  const result = await render(file, options)
-  const {
-    html,
-    tocHtml,
-    slug,
-    title,
-  } = result
+  const renderer = new Arcdown(options)
+  const result = await renderer.render(file)
+  const { html, tocHtml, slug, title } = result
 
-  const doc = `<!DOCTYPE html>
+  const doc = `
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -91,7 +88,8 @@ async function main () {
       ${tocHtml}
     </nav>
   </body>
-</html>`
+</html>
+    `.trim()
 
   writeFileSync(`${new URL('.', import.meta.url).pathname}/${slug}.html`, doc)
 

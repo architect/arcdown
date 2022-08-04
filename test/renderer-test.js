@@ -1,14 +1,15 @@
 import test from 'tape'
-import render from '../src/index.js'
+import { Arcdown } from '../src/index.js'
 
 test('renderer without frontmatter', async (t) => {
-  const file = /* md */`
+  const file = /* md */ `
 ## Hello, World
 lorem ipsum dolor sit amet
 `.trim()
   const expected = '<h2 id="hello%2C-world">Hello, World</h2>\n<p>lorem ipsum dolor sit amet</p>\n'
 
-  const { html, title, slug } = await render(file)
+  const renderer = new Arcdown()
+  const { html, title, slug } = await renderer.render(file)
 
   t.equal(html, expected, 'just plain markdown')
   t.notOk(title, 'title is not present')
@@ -19,7 +20,7 @@ lorem ipsum dolor sit amet
 
 test('renderer markdown-it options', async (t) => {
   const LINK = 'https://arc.codes'
-  const file = /* md */`
+  const file = /* md */ `
 > Architect is a simple tool to build and deliver powerful functional web apps and APIs
 
 Visit ${LINK} for more info.
@@ -27,7 +28,8 @@ Visit ${LINK} for more info.
 
   const options = { markdownIt: { linkify: false } }
 
-  const { html } = await render(file, options)
+  const renderer = new Arcdown(options)
+  const { html } = await renderer.render(file)
 
   t.ok(html.indexOf(LINK) >= 0, 'link is present')
   t.ok(html.indexOf(`>${LINK}</a`) < 0, 'anchor tag is not present')
@@ -41,7 +43,7 @@ test('renderer baseline with frontmatter', async (t) => {
   const CATEGORY = 'Testing'
   const DESCRIPTION = 'Make sure we get Markdown'
   const LINK = 'https://arc.codes'
-  const file = /* md */`
+  const file = /* md */ `
 ---
 title: ${TITLE}
 category: ${CATEGORY}
@@ -63,13 +65,8 @@ Visit ${LINK} for more info.
 lorem ipsum dolor sit amet
 `.trim()
 
-  const {
-    frontmatter,
-    html,
-    tocHtml,
-    slug,
-    title,
-  } = await render(file)
+  const renderer = new Arcdown()
+  const { frontmatter, html, tocHtml, slug, title } = await renderer.render(file)
 
   t.equal(title, TITLE, 'title attribute is present')
   t.equal(typeof frontmatter, 'object', 'frontmatter is an object')
@@ -88,7 +85,7 @@ lorem ipsum dolor sit amet
 })
 
 test('verbose frontmatter', async (t) => {
-  const file = /* md */`
+  const file = /* md */ `
 ---
 title: "Using GitHub Actions with Architect"
 author: 'Simon MacDonald'
@@ -109,10 +106,12 @@ description: 'GitHub Actions is a "continuous integration" and continuous delive
     image: 'post-assets/gh-actions.png',
     tags: [ 'foo', 'bar' ],
     category: [ 'ci', 'cd' ],
-    description: 'GitHub Actions is a "continuous integration" and continuous delivery (CI/CD) platform.',
+    description:
+      'GitHub Actions is a "continuous integration" and continuous delivery (CI/CD) platform.',
   }
 
-  const { frontmatter, slug } = await render(file)
+  const renderer = new Arcdown()
+  const { frontmatter, slug } = await renderer.render(file)
 
   t.deepEqual(frontmatter, expected, 'frontmatter is parsed correctly')
   t.equal(slug, 'using-github-actions-with-architect', 'slug is generated correctly')
@@ -123,7 +122,7 @@ description: 'GitHub Actions is a "continuous integration" and continuous delive
 test('renderer custom slug', async (t) => {
   const TITLE = 'Test Doc'
   const CUSTOM_SLUG = 'custom-slug'
-  const file = /* md */`
+  const file = /* md */ `
 ---
 title: ${TITLE}
 slug: ${CUSTOM_SLUG}
@@ -132,7 +131,8 @@ slug: ${CUSTOM_SLUG}
 lorem ipsum dolor sit amet
 `.trim()
 
-  const { frontmatter, slug, title } = await render(file)
+  const renderer = new Arcdown()
+  const { frontmatter, slug, title } = await renderer.render(file)
 
   t.equal(title, TITLE, 'title attribute is present')
   t.equal(slug, CUSTOM_SLUG, 'slug is customized')

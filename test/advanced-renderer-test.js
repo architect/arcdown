@@ -1,10 +1,13 @@
 import test from 'tape'
 import MarkdownIt from 'markdown-it'
-import render, { createHighlight } from '../src/index.js'
+import { Arcdown } from '../src/index.js'
+import { Highlighter } from '../src/lib/hljs-highlighter.js'
+
+const FENCE = '```'
 
 test('custom renderer with defaults', async (t) => {
   const OUTPUT = 'Not the droids you are looking for'
-  const file = /* md */`
+  const file = /* md */ `
 ---
 title: Hello world
 ---
@@ -12,8 +15,10 @@ title: Hello world
 lorem ipsum dolor sit amet
 `.trim()
 
-  const renderer = { render: () => OUTPUT }
-  const { html, tocHtml, title, slug } = await render(file, { renderer })
+  const myRenderer = { render: () => OUTPUT }
+  const options = { renderer: myRenderer }
+  const renderer = new Arcdown(options)
+  const { html, tocHtml, title, slug } = await renderer.render(file)
 
   t.equal(html, OUTPUT, 'render function is used')
   t.notOk(tocHtml, 'tocHtml is not generated')
@@ -23,8 +28,8 @@ lorem ipsum dolor sit amet
 })
 
 test('custom markdown-it renderer + highlighter with default config', async (t) => {
-  const CLASS_STRING = 'sjlh'
-  const file = /* md */`
+  const CLASS = 'sjlh'
+  const file = /* md */ `
 ---
 title: Hello world
 ---
@@ -32,30 +37,38 @@ title: Hello world
 
 https://arc.codes
 
-\`\`\`javascript
+${FENCE}javascript
 async function () {
   console.log('Hello, world')
 }
-\`\`\`
+${FENCE}
 
-\`\`\`ruby
+${FENCE}ruby
 def handler
   puts 'Hello, world'
 end
-\`\`\`
+${FENCE}
 `.trim()
 
-  const renderer = new MarkdownIt({
-    highlight: await createHighlight(
-      { classString: CLASS_STRING },
-      [ 'ruby' ]
-    ),
+  const foundLanguages = new Set()
+  foundLanguages.add('ruby')
+  const myHighlighter = new Highlighter({ classString: CLASS })
+  const myRenderer = new MarkdownIt({
+    highlight: await myHighlighter.createHighlightFn(foundLanguages),
   })
-  const { html, slug, title, tocHtml } = await render(file, { renderer })
+  const options = { renderer: myRenderer }
+  const renderer = new Arcdown(options)
+  const { html, slug, title, tocHtml } = await renderer.render(file)
 
   t.ok(html.indexOf('href="https://arc.codes"') === -1, 'linkify is disabled')
-  t.ok(html.indexOf(`<pre class="${CLASS_STRING}"><code data-language="ruby">`) >= 0, 'highlight is enabled for provided languages')
-  t.ok(html.indexOf(`<pre class="${CLASS_STRING} hljs-unregistered"><code data-language="javascript">`) >= 0, 'not provided languages are not highlighted')
+  t.ok(
+    html.indexOf(`<pre class="${CLASS}"><code data-language="ruby">`) >= 0,
+    'highlight is enaCLASSvided languages',
+  )
+  t.ok(
+    html.indexOf(`<pre class="${CLASS} hljs-unregistered"><code data-language="javascript">`) >= 0,
+    'unprovided languCLASS highlighted',
+  )
   t.ok(title && slug, 'frontmatter is parsed and returned')
   t.ok(typeof tocHtml === 'string', 'ToC is a string of HTML')
 
