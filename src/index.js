@@ -6,7 +6,7 @@ import matter from 'gray-matter'
 
 import markdownItClass from './vendor/markdown-it-class.cjs'
 
-import { Highlighter } from './lib/highlighter.js'
+import { Highlighter } from './lib/hljs-highlighter.js'
 import findLanguages from './lib/findLanguages.js'
 import slugify from './lib/slugify.js'
 

@@ -1,7 +1,7 @@
 import test from 'tape'
 import MarkdownIt from 'markdown-it'
 import { Arcdown } from '../src/index.js'
-import { Highlighter } from '../src/lib/highlighter.js'
+import { Highlighter } from '../src/lib/hljs-highlighter.js'
 
 const FENCE = '```'
 
