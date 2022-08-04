@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [2.0.0] 2022-08-03
+
+Large-ish refactor to use a named `class` export.
+
+```javascript
+import { Arcdown } from 'arcdown'
+```
+
 ### Added
-- `Renderer` class interface
-- `markdownItAnchor` and `markdown-it-toc-done-right` *see "Changed" below
+- `Arcdown` class interface
+- `markdownItAnchor` and `markdownItToc` *see "Changed" below
 
 ### Removed
 - `default` function as render interface
@@ -21,10 +29,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `markdownItTocAndAnchor` retired
   - use `markdown-it-anchor` as `markdownItAnchor` for heading anchor creation
   - use `markdown-it-toc-done-right` as `markdownItToc` for table of contents
-- `arcdown` referenced as Arcdown or `Arcdown` instead
+- lowercase `arcdown` changed to Arcdown
 
 ### Fixed
 - hljs plugin application in subsequent render calls
+  - caused by instantiating hljs options on each render, solved with class structures
 - handle codefence language specifiers with trailing spaces and meta info
   - this correctly loads the `javascript` language for syntax highlighting:
 ````

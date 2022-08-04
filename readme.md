@@ -10,7 +10,7 @@
   <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="Apache-2.0 License"></a>
 </p>
 
-# `arcdown`: [Architect](https://arc.codes)'s Markdown Renderer
+# Arcdown: [Architect](https://arc.codes)'s Markdown Renderer
 
 > A small stack of Markdown tools (built on `markdown-it`) configured using the Architect team's preferred conventions for creating documentation and articles rendered and served from a cloud function.
 
@@ -41,7 +41,7 @@
 
 ## What is this?
 
-`arcdown` is an opinionated toolchain to create technical content from Markdown source files as quickly as possible to enable **on-the-fly rendering** in a Lambda (or any server) runtime.
+Arcdown is an opinionated toolchain to create technical content from Markdown source files as quickly as possible to enable **on-the-fly rendering** in a Lambda (or any server) runtime.
 
 ### Features
 
@@ -69,7 +69,7 @@ _ESM only, requires Node.js v14+_
 
 ## Example
 
-The simplest usage is to just pass `arcdown` a string of Markdown:
+The simplest usage is to just pass `Arcdown.render` a string of Markdown:
 
 ```javascript
 import { readFileSync } from 'node:fs'
@@ -88,23 +88,23 @@ lorem ipsum _dolor_ sit **amet**
 [Architect](https://arc.codes/)
 `.trim()
 
-const renderer = new Arcdown()
+const arcdown = new Arcdown()
 const {
   frontmatter, // attributes from frontmatter
   html,        // the good stuff: HTML!
   slug,        // a URL-friendly slug
   title,       // document title from the frontmatter
   tocHtml,     // an HTML table of contents
-} = await renderer.render(mdString)
+} = await arcdown.render(mdString)
 
-const fromFile = await renderer.render(readFileSync('../docs/some-markdown.md', 'utf-8'))
+const fromFile = await arcdown.render(readFileSync('../docs/some-markdown.md', 'utf-8'))
 ```
 
 > ⚙️  See [below for configuration options](#configuration).
 
 ## Render Result
 
-`arcdown` returns a `RenderResult` object with 4 strings plus any document "frontmatter".
+`Arcdown.render` returns a `RenderResult` object with 4 strings plus any document "frontmatter".
 
 <table>
 <tr>
@@ -118,7 +118,7 @@ The Markdown document contents as HTML, unmodified, rendered by `markdown-it`.
 <td width="600px"><br>
 
 ```javascript
-const { html } = await renderer.render(mdString)
+const { html } = await arcdown.render(mdString)
 
 const document = `
 <html>
@@ -145,7 +145,7 @@ The document's table of contents as HTML (nested unordered lists).
 <td width="600px"><br>
 
 ```javascript
-const { tocHtml, html } = await renderer.render(mdString)
+const { tocHtml, html } = await arcdown.render(mdString)
 
 const document = `
 <html>
@@ -173,7 +173,7 @@ The document title, lifted from the document's frontmatter.
 <td width="600px"><br>
 
 ```javascript
-const { title } = await renderer.render(mdString)
+const { title } = await arcdown.render(mdString)
 
 console.log(`Rendered "${title}"`)
 ```
@@ -194,7 +194,7 @@ A URL-friendly slug of the title. (possibly empty) Synonymous with links in the 
 <td width="600px"><br>
 
 ```javascript
-const { slug } = await renderer.render(mdString)
+const { slug } = await arcdown.render(mdString)
 
 const docLink = `http://my-site.com/docs/${slug}`
 ```
@@ -217,7 +217,7 @@ The document's frontmatter is parsed by [`gray-matter`](https://github.com/jonsc
 <td width="600px"><br>
 
 ```javascript
-const { frontmatter } = await renderer.render(file, options)
+const { frontmatter } = await arcdown.render(file, options)
 
 const sortedTags = frontmatter.tags.sort()
 ```
@@ -228,7 +228,7 @@ const sortedTags = frontmatter.tags.sort()
 
 # Configuration
 
-`arcdown` is set up to be used without any configuration. Out-of-the-box it uses defaults and conventions preferred by the Architect team (Architect project not required).
+Arcdown is set up to be used without any configuration. Out-of-the-box it uses defaults and conventions preferred by the Architect team (Architect project not required).
 
 However, the renderer is customizable and extensible with a `RendererOptions` object.
 
@@ -249,7 +249,7 @@ This config is passed directly to `new MarkdownIt()`
 <td width="600px"><br>
 
 ```javascript
-const renderer = new Arcdown({
+const arcdown = new Arcdown({
   markdownIt: { linkify: false },
 })
 ```
@@ -285,7 +285,7 @@ This plugin is disabled unless configuration is provided.
 <td width="600px"><br>
 
 ```javascript
-const renderer = new Arcdown({
+const arcdown = new Arcdown({
   pluginOverrides: {
     markdownItClass: {
       // an element => class map
@@ -310,7 +310,7 @@ For performance reasons, this plugin was modified and bundled to `./src/vendor/`
 
 Mark all external links (links starting with "http[s]://") with `target=_blank` and an optional class.
 
-Plugin defaults are used in `arcdown`.
+`markdown-it-external-anchor` defaults are used in Arcdown.
 
 [`markdown-it-external-anchor` docs](https://github.com/binyamin/markdown-it-external-anchor)
 
@@ -318,7 +318,7 @@ Plugin defaults are used in `arcdown`.
 <td width="600px"><br>
 
 ```javascript
-const renderer = new Arcdown({
+const arcdown = new Arcdown({
   pluginOverrides: {
     markdownItExternalAnchor: {
       domain: 'arc.codes',
@@ -346,7 +346,7 @@ A markdown-it plugin that adds an id attribute to headings and optionally permal
 <td width="600px"><br>
 
 ```javascript
-const renderer = new Arcdown({
+const arcdown = new Arcdown({
   pluginOverrides: {
     markdownItAnchor: {
       tocClassName: 'pageToC',
@@ -381,7 +381,7 @@ A table of contents (TOC) plugin for Markdown-it with focus on semantic and secu
 <td width="600px"><br>
 
 ```javascript
-const renderer = new Arcdown({
+const arcdown = new Arcdown({
   pluginOverrides: {
     markdownItToc: {
       containerClass: 'pageToC',
@@ -408,8 +408,8 @@ ${toc}
 
 ## User-Provided Plugins: `plugins`
 
-It is possible to pass additional `markdown-it` plugins to `arcdown`'s renderer by populating `RendererOptions.plugins`.  
-Plugins can be provided in two ways and will be applied after the default plugins bundled with `arcdown`.
+It is possible to pass additional `markdown-it` plugins to Arcdown's renderer by populating `RendererOptions.plugins`.  
+Plugins can be provided in two ways and will be applied after the default plugins bundled with Arcdown.
 
 <table>
 <tr>
@@ -425,7 +425,7 @@ The simplest method for extending `markdown-it` is to import a plugin function a
 ```javascript
 import markdownItAttrs from 'markdown-it-attrs'
 
-const renderer = new Arcdown({
+const arcdown = new Arcdown({
   plugins: { markdownItAttrs },
 })
 ```
@@ -450,7 +450,7 @@ Here the key name provided does not matter.
 ```javascript
 import markdownItEmoji from 'markdown-it-emoji'
 
-const renderer = new Arcdown({
+const arcdown = new Arcdown({
   plugins: {
     mdMoji: [
       markdownItEmoji, // the plugin function
@@ -466,7 +466,7 @@ const renderer = new Arcdown({
 
 ## Highlight.js (hljs) Config: `hljs`
 
-A custom `highlight()` method backed by [Highlight.js](https://highlightjs.org/) is provided to the `markdown-it` renderer. `arcdown` will detect languages used in fenced code blocks in the provided Markdown string and attempt to register _just_ those languages in hljs.
+A custom `highlight()` method backed by [Highlight.js](https://highlightjs.org/) is provided to the internal `markdown-it` renderer. Arcdown will detect languages used in fenced code blocks in the provided Markdown string and attempt to register _just_ those languages in hljs.
 
 > ⚠️  Currently, shorthand aliases for languages are not supported.  
 Full language names should be used with Markdown code fences. Instead of `js`, use `javascript`
@@ -485,7 +485,7 @@ A string that will be added to each `<pre class="">` wrapper tag for highlighted
 <td width="600px"><br>
 
 ```javascript
-const renderer = new Arcdown({
+const arcdown = new Arcdown({
   hljs: {
     classString: 'hljs relative mb-2',
   },
@@ -510,7 +510,7 @@ Passed directly to `hljs.highlight()`. [The docs](https://highlightjs.readthedoc
 <td width="600px"><br>
 
 ```javascript
-const renderer = new Arcdown({
+const arcdown = new Arcdown({
   hljs: {
     ignoreIllegals: false,
   },
@@ -538,7 +538,7 @@ If needed, Highlight.js built-in languages can be disabled by setting their key 
 ```javascript
 import leanSyntax from 'highlightjs-lean'
 
-const renderer = new Arcdown({
+const arcdown = new Arcdown({
   hljs: {
     languages: {
       lean: leanSyntax, // add lean
@@ -558,7 +558,7 @@ const renderer = new Arcdown({
 
 ### `plugins: object[]`
 
-Highlight.js plugins can be passed to `arcdown`'s highlighter as an array of objects or class instances with functions keyed as hljs callbacks.
+Highlight.js plugins can be passed to Arcdown's highlighter as an array of objects or class instances with functions keyed as hljs callbacks.
 
 See [the hljs plugin docs](https://highlightjs.readthedocs.io/en/latest/plugin-api.html) for more info.
 
@@ -579,7 +579,7 @@ class CodeFlipper {
   }
 }
 
-const renderer = new Arcdown({
+const arcdown = new Arcdown({
   hljs: {
     plugins: [new CodeFlipper({ token: '\n' })],
   },
@@ -594,7 +594,7 @@ const renderer = new Arcdown({
 
 A couple plugins have been forked and/or vendored locally to this package. This has been done to increase performance and render speed.
 
-`arcdown` is not attached to any single package, plugin, or even to the core rendering engine, so long as the resulting features are maintained.  
+Arcdown is not attached to any single package, plugin, or even to the core rendering engine, so long as the resulting features are maintained.  
 Suggestions and PRs welcome 🙏
 
 ## FAQs & Decisions
