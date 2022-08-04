@@ -73,7 +73,7 @@ The simplest usage is to just pass `arcdown` a string of Markdown:
 
 ```javascript
 import { readFileSync } from 'node:fs'
-import render from 'arcdown'
+import { Arcdown } from 'arcdown'
 
 const mdString = `
 ---
@@ -88,15 +88,16 @@ lorem ipsum _dolor_ sit **amet**
 [Architect](https://arc.codes/)
 `.trim()
 
+const renderer = new Arcdown()
 const {
   frontmatter, // attributes from frontmatter
   html,        // the good stuff: HTML!
   slug,        // a URL-friendly slug
   title,       // document title from the frontmatter
   tocHtml,     // an HTML table of contents
-} = await render(mdString)
+} = await renderer.render(mdString)
 
-const fromFile = await render(readFileSync('../docs/some-markdown.md', 'utf-8'))
+const fromFile = await renderer.render(readFileSync('../docs/some-markdown.md', 'utf-8'))
 ```
 
 > ⚙️  See [below for configuration options](#configuration).
@@ -117,7 +118,7 @@ The Markdown document contents as HTML, unmodified, rendered by `markdown-it`.
 <td width="600px"><br>
 
 ```javascript
-const { html } = await render(mdString)
+const { html } = await renderer.render(mdString)
 
 const document = `
 <html>
@@ -144,7 +145,7 @@ The document's table of contents as HTML (nested unordered lists).
 <td width="600px"><br>
 
 ```javascript
-const { tocHtml, html } = await render(mdString)
+const { tocHtml, html } = await renderer.render(mdString)
 
 const document = `
 <html>
@@ -172,7 +173,7 @@ The document title, lifted from the document's frontmatter.
 <td width="600px"><br>
 
 ```javascript
-const { title } = await render(mdString)
+const { title } = await renderer.render(mdString)
 
 console.log(`Rendered "${title}"`)
 ```
@@ -193,7 +194,7 @@ A URL-friendly slug of the title. (possibly empty) Synonymous with links in the 
 <td width="600px"><br>
 
 ```javascript
-const { slug } = await render(mdString)
+const { slug } = await renderer.render(mdString)
 
 const docLink = `http://my-site.com/docs/${slug}`
 ```
@@ -216,7 +217,7 @@ The document's frontmatter is parsed by [`gray-matter`](https://github.com/jonsc
 <td width="600px"><br>
 
 ```javascript
-const { frontmatter } = await render(file, options)
+const { frontmatter } = await renderer.render(file, options)
 
 const sortedTags = frontmatter.tags.sort()
 ```
@@ -248,7 +249,7 @@ This config is passed directly to `new MarkdownIt()`
 <td width="600px"><br>
 
 ```javascript
-await render(mdString, {
+const renderer = new Arcdown({
   markdownIt: { linkify: false },
 })
 ```
@@ -284,7 +285,7 @@ This plugin is disabled unless configuration is provided.
 <td width="600px"><br>
 
 ```javascript
-await render(mdString, {
+const renderer = new Arcdown({
   pluginOverrides: {
     markdownItClass: {
       // an element => class map
@@ -317,7 +318,7 @@ Plugin defaults are used in `arcdown`.
 <td width="600px"><br>
 
 ```javascript
-await render(mdString, {
+const renderer = new Arcdown({
   pluginOverrides: {
     markdownItExternalAnchor: {
       domain: 'arc.codes',
@@ -335,34 +336,70 @@ await render(mdString, {
 <tr>
 <td width="400px" valign="top">
 
-### `markdownItTocAndAnchor`
+### `markdownItAnchor`
 
-Modify all document headings with anchor tags and generate an HTML table of contents utilizing those heading anchors.
+A markdown-it plugin that adds an id attribute to headings and optionally permalinks.
 
-[`markdown-it-toc-and-anchor` docs](https://github.com/medfreeman/markdown-it-toc-and-anchor)
+[`markdown-it-anchor` docs](https://github.com/valeriangalliat/markdown-it-anchor)
 
 </td>
 <td width="600px"><br>
 
 ```javascript
-await render(mdString, {
+const renderer = new Arcdown({
   pluginOverrides: {
-    markdownItTocAndAnchor: {
+    markdownItAnchor: {
       tocClassName: 'pageToC',
     },
   },
 })
 ```
 
-`markdown-it-toc-and-anchor` is pre-configured with:
+`markdown-it-anchor` is pre-configured with:
 
 ```javascript
 {
-  anchorLink: false,
-  tocFirstLevel: 2,
-  tocLastLevel: 6,
-  tocClassName: 'docToc',
+  tabIndex: false,
 }
+```
+
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td width="400px" valign="top">
+
+### `markdownItToc`
+
+A table of contents (TOC) plugin for Markdown-it with focus on semantic and security. Made to work gracefully with markdown-it-anchor.
+
+[`markdown-it-toc-done-right` docs](https://github.com/nagaozen/markdown-it-toc-done-right)
+
+</td>
+<td width="600px"><br>
+
+```javascript
+const renderer = new Arcdown({
+  pluginOverrides: {
+    markdownItToc: {
+      containerClass: 'pageToC',
+    },
+  },
+})
+```
+
+`markdown-it-toc-done-right` enables users to include a copy of the table of contents in their markdown:
+
+```markdown
+My Table of Contents:
+
+${toc}
+
+# The rest of
+
+## My document
 ```
 
 </td>
@@ -388,7 +425,7 @@ The simplest method for extending `markdown-it` is to import a plugin function a
 ```javascript
 import markdownItAttrs from 'markdown-it-attrs'
 
-await render(mdString, {
+const renderer = new Arcdown({
   plugins: { markdownItAttrs },
 })
 ```
@@ -413,7 +450,7 @@ Here the key name provided does not matter.
 ```javascript
 import markdownItEmoji from 'markdown-it-emoji'
 
-await render(mdString, {
+const renderer = new Arcdown({
   plugins: {
     mdMoji: [
       markdownItEmoji, // the plugin function
@@ -448,7 +485,7 @@ A string that will be added to each `<pre class="">` wrapper tag for highlighted
 <td width="600px"><br>
 
 ```javascript
-await render(mdString, {
+const renderer = new Arcdown({
   hljs: {
     classString: 'hljs relative mb-2',
   },
@@ -473,7 +510,7 @@ Passed directly to `hljs.highlight()`. [The docs](https://highlightjs.readthedoc
 <td width="600px"><br>
 
 ```javascript
-await render(mdString, {
+const renderer = new Arcdown({
   hljs: {
     ignoreIllegals: false,
   },
@@ -501,7 +538,7 @@ If needed, Highlight.js built-in languages can be disabled by setting their key 
 ```javascript
 import leanSyntax from 'highlightjs-lean'
 
-await render(mdString, {
+const renderer = new Arcdown({
   hljs: {
     languages: {
       lean: leanSyntax, // add lean
@@ -542,7 +579,7 @@ class CodeFlipper {
   }
 }
 
-await render(mdString, {
+const renderer = new Arcdown({
   hljs: {
     plugins: [new CodeFlipper({ token: '\n' })],
   },
