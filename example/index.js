@@ -1,14 +1,14 @@
-import { URL } from 'url';
-import { readFileSync, writeFileSync } from 'fs';
-import razorSyntax from 'highlightjs-cshtml-razor';
-import leanSyntax from 'highlightjs-lean';
-import markdownItAttrs from 'markdown-it-attrs';
-import markdownItEmoji from 'markdown-it-emoji';
-import { Arcdown } from 'arcdown';
+import { URL } from 'url'
+import { readFileSync, writeFileSync } from 'fs'
+import razorSyntax from 'highlightjs-cshtml-razor'
+import leanSyntax from 'highlightjs-lean'
+import markdownItAttrs from 'markdown-it-attrs'
+import markdownItEmoji from 'markdown-it-emoji'
+import { Arcdown } from 'arcdown'
 
 // read the sample markdown file
-const path = new URL('.', import.meta.url).pathname;
-const file = readFileSync(`${path}/example.md`, 'utf8');
+const path = new URL('.', import.meta.url).pathname
+const file = readFileSync(`${path}/example.md`, 'utf8')
 
 const options = {
   hljs: {
@@ -29,8 +29,8 @@ const options = {
     // set options for markdown-it-class plugin
     markdownItClass: {
       // in this case, that's an element => class map
-      h2: ['title'],
-      p: ['prose'],
+      h2: [ 'title' ],
+      p: [ 'prose' ],
     },
     // disable markdown-it-external-anchor plugin
     markdownItExternalAnchor: false,
@@ -48,14 +48,14 @@ const options = {
       },
     ],
   },
-};
+}
 
 // create an async function
-async function main() {
+async function main () {
   // render markdown to html
-  const renderer = new Arcdown(options);
-  const result = await renderer.render(file);
-  const { html, tocHtml, slug, title } = result;
+  const renderer = new Arcdown(options)
+  const result = await renderer.render(file)
+  const { html, tocHtml, slug, title } = result
 
   const doc = `
 <!DOCTYPE html>
@@ -89,12 +89,12 @@ async function main() {
     </nav>
   </body>
 </html>
-    `.trim();
+    `.trim()
 
-  writeFileSync(`${new URL('.', import.meta.url).pathname}/${slug}.html`, doc);
+  writeFileSync(`${new URL('.', import.meta.url).pathname}/${slug}.html`, doc)
 
-  console.log(`Rendered "${title}" to ${slug}.html`);
+  console.log(`Rendered "${title}" to ${slug}.html`)
 }
 
 // run the main function
-main();
+main()
