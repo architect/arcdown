@@ -13,6 +13,7 @@ export class Highlighter {
       classString = 'hljs',
       ignoreIllegals = true,
       languages: providedLanguages = {},
+      sublanguages = {},
       plugins = [],
     } = {},
   ) {
@@ -20,9 +21,12 @@ export class Highlighter {
       classString,
       ignoreIllegals,
       providedLanguages,
+      sublanguages,
     }
 
     this.hljs = hljs
+
+    this.hljs.registerAliases('html', { languageName: 'xml' })
 
     for (const plugin of plugins) {
       this.hljs.addPlugin(plugin)
@@ -79,6 +83,13 @@ export class Highlighter {
       }
 
       if (languageName && definitionFn) {
+        if (Object.keys(this.options.sublanguages).includes(languageName)) {
+          for (const sublanguage of this.options.sublanguages[languageName]) {
+            const sublanguageDef  = (await import(`highlight.js/lib/languages/${sublanguage}`)).default
+            this.hljs.registerLanguage(sublanguage, sublanguageDef)
+          }
+        }
+
         this.hljs.registerLanguage(languageName, definitionFn)
       }
     }

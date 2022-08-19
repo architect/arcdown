@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [2.1.0] 2022-08-19
+
+### Added
+- hljs options now accepts `sublaunguages` dictionary to register languages that may be used inside a parent grammar.
+
+Example:
+
+```js
+{
+  hljs: {
+    sublanguages: {
+      javascript: [ 'xml', 'css' ]
+    }
+  }
+}
+```
+
+````
+```javascript
+html`
+  <h1>Welcome</h1>
+  <p>Hello, world</p>
+`
+css`
+  h1 {
+    color: red;
+    margin-bottom: 2rem;
+  }
+`
+```
+````
+
+hljs highlighting will be applied to the HTML (as "xml") and CSS strings.
+
 ## [2.0.0] 2022-08-03
 
 Large-ish refactor to use a named `class` export.

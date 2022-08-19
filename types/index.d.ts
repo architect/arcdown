@@ -15,6 +15,7 @@ export interface HljsOptions {
 	classString?: string;
 	ignoreIllegals?: boolean;
 	languages?: object;
+	sublanguages?: object;
 	plugins?: object[];
 }
 

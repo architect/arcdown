@@ -1,7 +1,7 @@
-import test from 'tape'
+import tap from 'tap'
 import { Arcdown } from '../src/index.js'
 
-test('renderer without frontmatter', async (t) => {
+tap.test('renderer without frontmatter', async (t) => {
   const file = /* md */ `
 ## Hello, World
 lorem ipsum dolor sit amet
@@ -18,7 +18,7 @@ lorem ipsum dolor sit amet
   t.end()
 })
 
-test('renderer markdown-it options', async (t) => {
+tap.test('renderer markdown-it options', async (t) => {
   const LINK = 'https://arc.codes'
   const file = /* md */ `
 > Architect is a simple tool to build and deliver powerful functional web apps and APIs
@@ -37,7 +37,7 @@ Visit ${LINK} for more info.
   t.end()
 })
 
-test('renderer baseline with frontmatter', async (t) => {
+tap.test('renderer baseline with frontmatter', async (t) => {
   const TITLE = 'Test Doc'
   const TITLE_SLUG = 'test-doc'
   const CATEGORY = 'Testing'
@@ -84,7 +84,7 @@ lorem ipsum dolor sit amet
   t.end()
 })
 
-test('verbose frontmatter', async (t) => {
+tap.test('verbose frontmatter', async (t) => {
   const file = /* md */ `
 ---
 title: "Using GitHub Actions with Architect"
@@ -113,13 +113,13 @@ description: 'GitHub Actions is a "continuous integration" and continuous delive
   const renderer = new Arcdown()
   const { frontmatter, slug } = await renderer.render(file)
 
-  t.deepEqual(frontmatter, expected, 'frontmatter is parsed correctly')
+  t.same(frontmatter, expected, 'frontmatter is parsed correctly')
   t.equal(slug, 'using-github-actions-with-architect', 'slug is generated correctly')
 
   t.end()
 })
 
-test('renderer custom slug', async (t) => {
+tap.test('renderer custom slug', async (t) => {
   const TITLE = 'Test Doc'
   const CUSTOM_SLUG = 'custom-slug'
   const file = /* md */ `

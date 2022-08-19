@@ -1,11 +1,11 @@
-import test from 'tape'
+import tap from 'tap'
 import MarkdownIt from 'markdown-it'
 import { Arcdown } from '../src/index.js'
 import { Highlighter } from '../src/lib/hljs-highlighter.js'
 
 const FENCE = '```'
 
-test('custom renderer with defaults', async (t) => {
+tap.test('custom renderer with defaults', async (t) => {
   const OUTPUT = 'Not the droids you are looking for'
   const file = /* md */ `
 ---
@@ -17,6 +17,7 @@ lorem ipsum dolor sit amet
 
   const myRenderer = { render: () => OUTPUT }
   const options = { renderer: myRenderer }
+  // @ts-ignore
   const renderer = new Arcdown(options)
   const { html, tocHtml, title, slug } = await renderer.render(file)
 
@@ -27,7 +28,7 @@ lorem ipsum dolor sit amet
   t.end()
 })
 
-test('custom markdown-it renderer + highlighter with default config', async (t) => {
+tap.test('custom markdown-it renderer + highlighter with default config', async (t) => {
   const CLASS = 'sjlh'
   const file = /* md */ `
 ---
@@ -56,6 +57,13 @@ ${FENCE}
   const myRenderer = new MarkdownIt({
     highlight: await myHighlighter.createHighlightFn(foundLanguages),
   })
+
+  t.same(
+    myHighlighter.hljs.listLanguages(),
+    [ 'ruby' ],
+    "Only 'ruby' is registered on my highlighter"
+  )
+
   const options = { renderer: myRenderer }
   const renderer = new Arcdown(options)
   const { html, slug, title, tocHtml } = await renderer.render(file)
@@ -63,11 +71,11 @@ ${FENCE}
   t.ok(html.indexOf('href="https://arc.codes"') === -1, 'linkify is disabled')
   t.ok(
     html.indexOf(`<pre class="${CLASS}"><code data-language="ruby">`) >= 0,
-    'highlight is enaCLASSvided languages',
+    'highlight is enabled for provided languages',
   )
   t.ok(
     html.indexOf(`<pre class="${CLASS} hljs-unregistered"><code data-language="javascript">`) >= 0,
-    'unprovided languCLASS highlighted',
+    'unprovided languages are not highlighted',
   )
   t.ok(title && slug, 'frontmatter is parsed and returned')
   t.ok(typeof tocHtml === 'string', 'ToC is a string of HTML')

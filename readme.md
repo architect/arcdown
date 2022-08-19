@@ -556,6 +556,35 @@ const arcdown = new Arcdown({
 <tr>
 <td width="400px" valign="top">
 
+### `sublanguages: object`
+
+Declare languages that should be registered when a specific language is detected.
+
+A common use-case is registering `'xml'` for `'javascript'` to enable HTML highlighting for `html` string templates.
+
+</td>
+<td width="600px"><br>
+
+```javascript
+import leanSyntax from 'highlightjs-lean'
+
+const arcdown = new Arcdown({
+  hljs: {
+    sublanguages: {
+      javascript: [ 'xml' ],
+    },
+  },
+})
+```
+
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td width="400px" valign="top">
+
 ### `plugins: object[]`
 
 Highlight.js plugins can be passed to Arcdown's highlighter as an array of objects or class instances with functions keyed as hljs callbacks.
