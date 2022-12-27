@@ -85,7 +85,7 @@ export class Highlighter {
       if (languageName && definitionFn) {
         if (Object.keys(this.options.sublanguages).includes(languageName)) {
           for (const sublanguage of this.options.sublanguages[languageName]) {
-            const sublanguageDef  = (await import(`highlight.js/lib/languages/${sublanguage}`)).default
+            const sublanguageDef = (await import(`highlight.js/lib/languages/${sublanguage}`)).default
             this.hljs.registerLanguage(sublanguage, sublanguageDef)
           }
         }

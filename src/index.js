@@ -7,7 +7,7 @@ import matter from 'gray-matter'
 import markdownItClass from './vendor/markdown-it-class.cjs'
 
 import { Highlighter } from './lib/hljs-highlighter.js'
-import findLanguages from './lib/findLanguages.js'
+import findLanguages from './lib/find-languages.js'
 import slugify from './lib/slugify.js'
 
 export class Arcdown {
