@@ -1,8 +1,8 @@
 // this file isn't necessarily executed
-// it is used to exercise the types and checked with dtslint
+// it is used to exercise the types and checked with tsd
 
 import { readFileSync } from 'fs';
-import { Arcdown, DefaultPlugins, HljsOptions, RenderResult, RendererOptions } from 'arcdown';
+import { Arcdown, DefaultPlugins, HljsOptions, RenderResult, RendererOptions } from './index';
 import MarkdownIt from 'markdown-it';
 
 // stubs

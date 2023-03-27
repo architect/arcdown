@@ -10,16 +10,15 @@
   },
   "type": "module",
   "scripts": {
-    "dtslint": "dtslint types",
+    "tsd": "tsd",
     "lint": "eslint src --fix",
-    "dev": "npx tap -w --jobs=1 --reporter=specy",
-    "tap": "npx tap --no-coverage --reporter=specy",
-    "test": "npm run lint && npm run dtslint && npm run tap"
+    "dev": "tap -w --jobs=1 --reporter=specy",
+    "tap": "tap --no-coverage --reporter=specy",
+    "test": "npm run lint && npm run tsd && npm run tap"
   },
   "main": "./src/index.js",
   "exports": "./src/index.js",
-  "types": "types",
-  "typings": "types",
+  "types": "types/index.d.ts",
   "files": [
     "src",
     "types/index.d.ts"
@@ -27,19 +26,19 @@
   "dependencies": {
     "@architect/syntaxes": "git+https://github.com/architect/syntaxes.git#v1.2.1",
     "gray-matter": "^4.0.3",
-    "highlight.js": "^11.6.0",
+    "highlight.js": "^11.7.0",
     "markdown-it": "^13.0.1",
-    "markdown-it-anchor": "^8.6.4",
+    "markdown-it-anchor": "^8.6.7",
     "markdown-it-external-anchor": "^1.0.0",
     "markdown-it-toc-done-right": "^4.2.0"
   },
   "devDependencies": {
-    "@architect/eslint-config": "^2.0.1",
-    "@definitelytyped/dtslint": "^0.0.112",
+    "@architect/eslint-config": "^2.1.1",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "^18.7.7",
-    "eslint": "^8.22.0",
-    "tap": "^16.3.0"
+    "@types/node": "^18.15.10",
+    "eslint": "^8.36.0",
+    "tap": "^16.3.4",
+    "tsd": "^0.28.0"
   },
   "eslintConfig": {
     "parserOptions": {

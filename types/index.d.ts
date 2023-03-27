@@ -32,7 +32,7 @@ export interface RenderResult {
 	tocHtml: string;
 	title?: string;
 	slug?: string;
-	frontmatter?: Record<string, any>;
+	frontmatter?: Record<string, unknown>;
 }
 
 export class Arcdown {

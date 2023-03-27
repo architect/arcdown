@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [2.1.1] 2023-03-26
+
+### Changed
+- upgraded dependencies
+- swapped `dtslint` for `tsd` for type testing
+
 ## [2.1.0] 2022-08-19
 
 ### Added
