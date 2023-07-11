@@ -1,7 +1,7 @@
-import tap from 'tap'
+import test from 'tape'
 import { Arcdown } from '../src/index.js'
 
-tap.test('renderer plugin overrides', async (t) => {
+test('renderer plugin overrides', async (t) => {
   const TOC_CLASS = 'pageToC'
   const file = /* md */ `
 ## Deploy to AWS

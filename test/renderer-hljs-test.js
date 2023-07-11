@@ -1,9 +1,9 @@
-import tap from 'tap'
+import test from 'tape'
 import { Arcdown } from '../src/index.js'
 
 const FENCE = '```'
 
-tap.test('renderer hljs options', async (t) => {
+test('renderer hljs options', async (t) => {
   const CLASS = 'hljs my-special-class'
   const file = /* md */ `
 ## Code things

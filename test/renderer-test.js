@@ -1,7 +1,7 @@
-import tap from 'tap'
+import test from 'tape'
 import { Arcdown } from '../src/index.js'
 
-tap.test('renderer without frontmatter', async (t) => {
+test('renderer without frontmatter', async (t) => {
   const file = /* md */ `
 ## Hello, World
 lorem ipsum dolor sit amet
@@ -18,7 +18,7 @@ lorem ipsum dolor sit amet
   t.end()
 })
 
-tap.test('renderer markdown-it options', async (t) => {
+test('renderer markdown-it options', async (t) => {
   const LINK = 'https://arc.codes'
   const file = /* md */ `
 > Architect is a simple tool to build and deliver powerful functional web apps and APIs
@@ -37,7 +37,7 @@ Visit ${LINK} for more info.
   t.end()
 })
 
-tap.test('renderer baseline with frontmatter', async (t) => {
+test('renderer baseline with frontmatter', async (t) => {
   const TITLE = 'Test Doc'
   const TITLE_SLUG = 'test-doc'
   const CATEGORY = 'Testing'
@@ -70,9 +70,9 @@ lorem ipsum dolor sit amet
 
   t.equal(title, TITLE, 'title attribute is present')
   t.equal(typeof frontmatter, 'object', 'frontmatter is an object')
-  t.equal(frontmatter.title, TITLE, 'title attribute is present')
-  t.equal(frontmatter.category, CATEGORY, 'category attribute is present')
-  t.equal(frontmatter.description, DESCRIPTION, 'description attribute is present')
+  t.equal(frontmatter?.title, TITLE, 'title attribute is present')
+  t.equal(frontmatter?.category, CATEGORY, 'category attribute is present')
+  t.equal(frontmatter?.description, DESCRIPTION, 'description attribute is present')
   t.equal(slug, TITLE_SLUG, 'slug attribute is generated')
   t.ok(typeof tocHtml === 'string', 'ToC is a string of HTML')
   t.ok(typeof html === 'string', 'html is a string of HTML')
@@ -84,7 +84,7 @@ lorem ipsum dolor sit amet
   t.end()
 })
 
-tap.test('verbose frontmatter', async (t) => {
+test('verbose frontmatter', async (t) => {
   const file = /* md */ `
 ---
 title: "Using GitHub Actions with Architect"
@@ -119,7 +119,7 @@ description: 'GitHub Actions is a "continuous integration" and continuous delive
   t.end()
 })
 
-tap.test('renderer custom slug', async (t) => {
+test('renderer custom slug', async (t) => {
   const TITLE = 'Test Doc'
   const CUSTOM_SLUG = 'custom-slug'
   const file = /* md */ `
@@ -136,7 +136,7 @@ lorem ipsum dolor sit amet
 
   t.equal(title, TITLE, 'title attribute is present')
   t.equal(slug, CUSTOM_SLUG, 'slug is customized')
-  t.equal(frontmatter.slug, CUSTOM_SLUG, 'slug is also on frontmatter')
+  t.equal(frontmatter?.slug, CUSTOM_SLUG, 'slug is also on frontmatter')
 
   t.end()
 })

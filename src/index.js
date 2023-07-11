@@ -31,11 +31,33 @@ export class Arcdown {
   }
 
   /**
-   * @param {import('../types').RendererOptions} [options] - arcdown options
+   * @param {{
+   *   markdownIt?: object,
+   *   plugins?: object,
+   *   renderer?: MarkdownIt,
+   *   hljs?: {
+   *     classString?: string,
+   *     ignoreIllegals?: boolean,
+   *     languages?: object,
+   *     sublanguages?: object,
+   *     plugins?: object[],
+   *   },
+   *   pluginOverrides?: {
+   *     markdownItClass?: object | boolean,
+   *     markdownItExternalAnchor?: object | boolean,
+   *     markdownItAnchor?: object | boolean,
+   *     markdownItToc?: object | boolean,
+   *   },
+   * }} options - renderer options
    */
   constructor (options = {}) {
-    const { hljs = {}, markdownIt = {}, pluginOverrides = {}, plugins = {}, renderer = null } =
-      options
+    const {
+      hljs = {},
+      markdownIt = {},
+      pluginOverrides = {},
+      plugins = {},
+      renderer = null,
+    } = options
 
     // don't apply classes if missing mapping
     if (!pluginOverrides.markdownItClass) {
@@ -86,6 +108,16 @@ export class Arcdown {
     this.renderer = mdit
   }
 
+  /**
+   * @param {Buffer | string} mdContent - markdown content
+   * @returns {Promise<{
+   *   html: string,
+   *   tocHtml: string,
+   *   title?: string,
+   *   slug?: string,
+   *   frontmatter?: Record<string, unknown>,
+   * }>} - rendered result
+   */
   async render (mdContent) {
     const { content, data: frontmatter } = matter(mdContent)
 

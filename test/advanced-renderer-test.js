@@ -1,11 +1,11 @@
-import tap from 'tap'
+import test from 'tape'
 import MarkdownIt from 'markdown-it'
 import { Arcdown } from '../src/index.js'
 import { Highlighter } from '../src/lib/hljs-highlighter.js'
 
 const FENCE = '```'
 
-tap.test('custom renderer with defaults', async (t) => {
+test('custom renderer with defaults', async (t) => {
   const OUTPUT = 'Not the droids you are looking for'
   const file = /* md */ `
 ---
@@ -28,7 +28,7 @@ lorem ipsum dolor sit amet
   t.end()
 })
 
-tap.test('custom markdown-it renderer + highlighter with default config', async (t) => {
+test('custom markdown-it renderer + highlighter with default config', async (t) => {
   const CLASS = 'sjlh'
   const file = /* md */ `
 ---
@@ -61,11 +61,10 @@ ${FENCE}
   t.same(
     myHighlighter.hljs.listLanguages(),
     [ 'ruby' ],
-    "Only 'ruby' is registered on my highlighter"
+    'Only "ruby" is registered on my highlighter'
   )
 
-  const options = { renderer: myRenderer }
-  const renderer = new Arcdown(options)
+  const renderer = new Arcdown({ renderer: myRenderer })
   const { html, slug, title, tocHtml } = await renderer.render(file)
 
   t.ok(html.indexOf('href="https://arc.codes"') === -1, 'linkify is disabled')

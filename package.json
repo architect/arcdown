@@ -10,23 +10,19 @@
   },
   "type": "module",
   "scripts": {
-    "tsd": "tsd",
     "lint": "eslint src --fix",
-    "dev": "tap -w --jobs=1 --reporter=specy",
-    "tap": "tap --no-coverage --reporter=specy",
-    "test": "npm run lint && npm run tsd && npm run tap"
+    "tape": "tape test/*-test.js | tap-arc",
+    "test": "npm run lint && npm run tape"
   },
   "main": "./src/index.js",
   "exports": "./src/index.js",
-  "types": "types/index.d.ts",
   "files": [
-    "src",
-    "types/index.d.ts"
+    "src"
   ],
   "dependencies": {
     "@architect/syntaxes": "git+https://github.com/architect/syntaxes.git#v1.2.1",
     "gray-matter": "^4.0.3",
-    "highlight.js": "^11.7.0",
+    "highlight.js": "^11.8.0",
     "markdown-it": "^13.0.1",
     "markdown-it-anchor": "^8.6.7",
     "markdown-it-external-anchor": "^1.0.0",
@@ -34,15 +30,13 @@
   },
   "devDependencies": {
     "@architect/eslint-config": "^2.1.1",
-    "@types/markdown-it": "^12.2.3",
-    "@types/node": "^18.15.10",
-    "eslint": "^8.36.0",
-    "tap": "^16.3.4",
-    "tsd": "^0.28.0"
+    "eslint": "^8.44.0",
+    "tap-arc": "^0.3.5",
+    "tape": "^5.6.4"
   },
   "eslintConfig": {
     "parserOptions": {
-      "ecmaVersion": 13,
+      "ecmaVersion": "latest",
       "sourceType": "module"
     },
     "extends": "@architect/eslint-config",

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- each instance of Arcdown will use a new instance of `hljs`
+  - this is more performant in single-execution cloud functions and was the intended design
+
+### Changed
+- upgrade dependencies
+- replace tap (50MB+) with tape
+- remove tsd and .d.ts in favor of JSDoc
+
 ## [2.1.1] 2023-03-26
 
 ### Changed

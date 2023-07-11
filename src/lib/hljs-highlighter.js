@@ -24,7 +24,7 @@ export class Highlighter {
       sublanguages,
     }
 
-    this.hljs = hljs
+    this.hljs = hljs.newInstance() // hljs is a singleton, always create a new instance
 
     this.hljs.registerAliases('html', { languageName: 'xml' })
 
@@ -34,7 +34,7 @@ export class Highlighter {
   }
 
   async #registerLanguages () {
-    const languageDefinitions = new Set()
+    const languageDefinitions = new Set() // full language names like "javascript"
     const allLanguages = { ...KNOWN_LANGUAGES, ...this.options.providedLanguages }
 
     if (this.foundLanguages) {
@@ -58,7 +58,7 @@ export class Highlighter {
       if (typeof langDef === 'string') {
         languageName = langDef
         try {
-          definitionFn = (await import(`highlight.js/lib/languages/${langDef}`)).default
+          definitionFn = (await import(`highlight.js/lib/languages/${languageName}`)).default
         }
         catch (error) {
           console.info(`arcdown unable to import "${languageName}" from hljs`)
@@ -83,7 +83,7 @@ export class Highlighter {
       }
 
       if (languageName && definitionFn) {
-        if (Object.keys(this.options.sublanguages).includes(languageName)) {
+        if (Object.keys(this.options.sublanguages).includes(languageName)) { // register sub-languages
           for (const sublanguage of this.options.sublanguages[languageName]) {
             const sublanguageDef = (await import(`highlight.js/lib/languages/${sublanguage}`)).default
             this.hljs.registerLanguage(sublanguage, sublanguageDef)
