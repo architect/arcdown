@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [2.2.0] 2023-07-10
+
 ### Fixed
 - each instance of Arcdown will use a new instance of `hljs`
   - this is more performant in single-execution cloud functions and was the intended design
