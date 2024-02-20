@@ -1,5 +1,5 @@
 import hljs from 'highlight.js/lib/core'
-import { escapeHtml } from 'markdown-it/lib/common/utils.js'
+import { escapeHtml } from 'markdown-it/lib/common/utils.mjs'
 import arcSyntax from '@architect/syntaxes/arc-hljs-grammar.js'
 
 const KNOWN_LANGUAGES = {

@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'fs'
 import razorSyntax from 'highlightjs-cshtml-razor'
 import leanSyntax from 'highlightjs-lean'
 import markdownItAttrs from 'markdown-it-attrs'
-import markdownItEmoji from 'markdown-it-emoji'
+import { full as emoji } from 'markdown-it-emoji'
 import { Arcdown } from 'arcdown'
 
 // read the sample markdown file
@@ -41,7 +41,7 @@ const options = {
     // verbose definition -- key name doesn't matter
     mdMoji: [
       // the plugin function:
-      markdownItEmoji,
+      emoji,
       // with options:
       {
         shortcuts: { laughing: ':D' },
