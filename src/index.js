@@ -50,29 +50,22 @@ export class Arcdown {
    * }} options - renderer options
    */
   constructor (options = {}) {
-    const {
-      hljs = {},
-      markdownIt = {},
-      pluginOverrides = {},
-      plugins = {},
-      renderer = null,
-    } = options
-
     // don't apply classes if missing mapping
-    if (!pluginOverrides.markdownItClass) {
-      pluginOverrides.markdownItClass = false
+    if (!options.pluginOverrides?.markdownItClass) {
+      options.pluginOverrides = options.pluginOverrides || {}
+      options.pluginOverrides.markdownItClass = false
     }
 
-    this.hljsOptions = hljs
-    this.mditOptions = markdownIt
-    this.mditPluginOverrides = pluginOverrides
-    this.mditAddedPlugins = plugins
-    this.customRenderer = !!renderer
+    this.hljsOptions = options.hljs || {}
+    this.mditOptions = options.markdownIt || {}
+    this.mditPluginOverrides = options.pluginOverrides || {}
+    this.mditAddedPlugins = options.plugins || {}
+    this.customRenderer = !!options.renderer
 
     this.highlighter = new Highlighter(this.hljsOptions)
 
     const mdit =
-      renderer || new MarkdownIt({
+      options.renderer || new MarkdownIt({
         linkify: true,
         html: true,
         typographer: true,

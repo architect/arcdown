@@ -1,10 +1,11 @@
 import hljs from 'highlight.js/lib/core'
 import { escapeHtml } from 'markdown-it/lib/common/utils.mjs'
 import arcSyntax from '@architect/syntaxes/arc-hljs-grammar.js'
+import xmlSyntax from 'highlight.js/lib/languages/xml'
 
 const KNOWN_LANGUAGES = {
   arc: arcSyntax,
-  html: 'highlight.js/lib/languages/xml',
+  html: xmlSyntax,
 }
 
 export class Highlighter {
@@ -28,76 +29,64 @@ export class Highlighter {
 
     this.hljs.registerAliases('html', { languageName: 'xml' })
 
-    for (const plugin of plugins) {
-      this.hljs.addPlugin(plugin)
-    }
+    for (const plugin of plugins) this.hljs.addPlugin(plugin)
   }
 
-  async #registerLanguages () {
-    const languageDefinitions = new Set() // full language names like "javascript"
-    const allLanguages = { ...KNOWN_LANGUAGES, ...this.options.providedLanguages }
+  /** @param {Set<string>} foundLanguages */
+  async #registerLanguages (foundLanguages) {
+    /** @type {Map<string, function>} */
+    const knownLangs = new Map(
+      Object.entries({
+        ...KNOWN_LANGUAGES,
+        ...this.options.providedLanguages,
+      })
+    )
 
-    if (this.foundLanguages) {
-      for (const langName of this.foundLanguages) {
-        const isProvided = Object.keys(allLanguages).includes(langName)
-        const excluded = isProvided && !allLanguages[langName]
+    // build languages we need in order to render
+    /** @type {Map<string, function>} */
+    const requiredLangs = new Map()
+    if (foundLanguages) {
+      for (const langName of foundLanguages) {
+        const knownLang = knownLangs.get(langName)
 
-        if (isProvided) {
-          languageDefinitions.add({ [langName]: allLanguages[langName] })
+        if (knownLang) {
+          // we have the definition
+          requiredLangs.set(langName, knownLang)
         }
-        else if (!excluded) {
-          languageDefinitions.add(langName)
+        else if (knownLang === false) {
+          // explicit false means don't load
+          continue
+        }
+        else {
+          // try to load the lang definition
+          try {
+            const defFn = (await import(`highlight.js/lib/languages/${langName}`)).default
+            requiredLangs.set(langName, defFn)
+          }
+          catch (error) {
+            console.info(`arcdown unable to import "${langName}" from hljs`)
+          }
+        }
+
+        // register sub-languages
+        if (this.options.sublanguages[langName]) {
+          for (const sublangName of this.options.sublanguages[langName]) {
+            const sublangDef = (await import(`highlight.js/lib/languages/${sublangName}`)).default
+            requiredLangs.set(sublangName, sublangDef)
+          }
         }
       }
     }
 
-    for (const langDef of languageDefinitions) {
-      let languageName
-      let definitionFn
-
-      if (typeof langDef === 'string' && langDef.length > 0) {
-        languageName = langDef
-        try {
-          definitionFn = (await import(`highlight.js/lib/languages/${languageName}`)).default
-        }
-        catch (error) {
-          console.info(`arcdown unable to import "${languageName}" from hljs`)
-        }
-      }
-      else if (langDef?.constructor.name === 'Object') {
-        languageName = Object.keys(langDef)[0]
-
-        if (typeof langDef[languageName] === 'string') {
-          try {
-            definitionFn = (await import(langDef[languageName])).default
-          }
-          catch (error) {
-            console.info(
-              `arcdown unable to import "${languageName}" from "${langDef[languageName]}"`,
-            )
-          }
-        }
-        else {
-          definitionFn = langDef[languageName]
-        }
-      }
-
-      if (languageName && definitionFn) {
-        if (Object.keys(this.options.sublanguages).includes(languageName)) { // register sub-languages
-          for (const sublanguage of this.options.sublanguages[languageName]) {
-            const sublanguageDef = (await import(`highlight.js/lib/languages/${sublanguage}`)).default
-            this.hljs.registerLanguage(sublanguage, sublanguageDef)
-          }
-        }
-
-        this.hljs.registerLanguage(languageName, definitionFn)
-      }
+    // register languages with hljs
+    for (const [ langName, defFn ] of requiredLangs) {
+      // @ts-ignore defFn is an HLJSApi fn
+      this.hljs.registerLanguage(langName, defFn)
     }
   }
 
   async createHighlightFn (foundLanguages = new Set()) {
-    this.foundLanguages = foundLanguages
-    await this.#registerLanguages()
+    await this.#registerLanguages(foundLanguages)
 
     return (code, language) => {
       const result = []
