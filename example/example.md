@@ -101,6 +101,12 @@ DISPLAY "HELLO WORLD".
 STOP RUN.
 ```
 
+### No language
+
+```
+This is a code fence without a language.
+```
+
 ## User-provided plugins
 
 ### Block `attrs`

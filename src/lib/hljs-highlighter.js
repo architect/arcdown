@@ -55,7 +55,7 @@ export class Highlighter {
       let languageName
       let definitionFn
 
-      if (typeof langDef === 'string') {
+      if (typeof langDef === 'string' && langDef.length > 0) {
         languageName = langDef
         try {
           definitionFn = (await import(`highlight.js/lib/languages/${languageName}`)).default
