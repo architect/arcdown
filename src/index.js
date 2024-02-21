@@ -1,10 +1,9 @@
 import MarkdownIt from 'markdown-it'
 import markdownItExternalAnchor from 'markdown-it-external-anchor'
 import markdownItAnchor from 'markdown-it-anchor'
+import markdownItClass from 'markdown-it-class'
 import markdownItToc from 'markdown-it-toc-done-right'
 import matter from 'gray-matter'
-
-import markdownItClass from './vendor/markdown-it-class.cjs'
 
 import { Highlighter } from './lib/hljs-highlighter.js'
 import findLanguages from './lib/find-languages.js'
