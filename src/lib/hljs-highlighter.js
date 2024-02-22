@@ -1,7 +1,7 @@
-import hljs from 'highlight.js/lib/core'
 import { escapeHtml } from 'markdown-it/lib/common/utils.mjs'
 import arcSyntax from '@architect/syntaxes/arc-hljs-grammar.js'
-import xmlSyntax from 'highlight.js/lib/languages/xml'
+import hljs from '../vendor/highlight.js/core.cjs'
+import xmlSyntax from '../vendor/highlight.js/languages/xml.js'
 
 const KNOWN_LANGUAGES = {
   arc: arcSyntax,
@@ -60,7 +60,7 @@ export class Highlighter {
         else {
           // try to load the lang definition
           try {
-            const defFn = (await import(`highlight.js/lib/languages/${langName}`)).default
+            const defFn = (await import(`../vendor/highlight.js/languages/${langName}.js`)).default
             requiredLangs.set(langName, defFn)
           }
           catch (error) {
@@ -71,8 +71,13 @@ export class Highlighter {
         // register sub-languages
         if (this.options.sublanguages[langName]) {
           for (const sublangName of this.options.sublanguages[langName]) {
-            const sublangDef = (await import(`highlight.js/lib/languages/${sublangName}`)).default
-            requiredLangs.set(sublangName, sublangDef)
+            try {
+              const sublangDef = (await import(`../vendor/highlight.js/languages/${sublangName}.js`)).default
+              requiredLangs.set(sublangName, sublangDef)
+            }
+            catch (error) {
+              console.info(`arcdown unable to import "${sublangName}" for "${langName} from hljs`)
+            }
           }
         }
       }

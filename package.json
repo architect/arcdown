@@ -11,6 +11,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint src --fix",
+    "postinstall": "node ./scripts/cp-hljs.js",
     "tape": "tape test/*-test.js | tap-arc",
     "test": "npm run lint && npm run tape"
   },
@@ -22,7 +23,6 @@
   "dependencies": {
     "@architect/syntaxes": "git+https://github.com/architect/syntaxes.git#v1.2.1",
     "gray-matter": "^4.0.3",
-    "highlight.js": "^11.9.0",
     "markdown-it": "^14.0.0",
     "markdown-it-anchor": "^8.6.7",
     "markdown-it-class": "^1.0.0",
@@ -32,6 +32,8 @@
   "devDependencies": {
     "@architect/eslint-config": "^2.1.2",
     "eslint": "^8.56.0",
+    "fs-extra": "^11.2.0",
+    "highlight.js": "^11.9.0",
     "tap-arc": "^1.2.2",
     "tape": "^5.7.5"
   },
@@ -43,7 +45,10 @@
     "extends": "@architect/eslint-config",
     "rules": {
       "fp/no-class": "off"
-    }
+    },
+    "ignorePatterns": [
+      "src/vendor/**/*"
+    ]
   },
   "keywords": [
     "markdown",
