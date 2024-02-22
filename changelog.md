@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [2.3.0] 2024-02-22
+
+## Changed
+- upgrade `markdownit` to v14
+- un-vendor `markdown-it-class` in favor of [updated fork](https://github.com/kamranahmedse/markdown-it-class)
+- vendor `highlight.js` to reduce dependencies' size
+- simplify hljs syntax loading
+
+## Note
+v4 of Arcdown will remove all default syntaxes for hljs in favor of user-defined syntaxes. This will greatly reduce the size of the package and allow for more granular control over syntaxes.  
+A guide and tooling will be provided to help users bring in pre-built syntaxes.
+
+Further, v4 will likely vendor `markdown-it` since that dependency ships > 1MB of unused (in Arcdown) code.
+
 ## [2.2.0] 2023-07-10
 
 ### Fixed
